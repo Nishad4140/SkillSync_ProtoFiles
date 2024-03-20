@@ -1,0 +1,25 @@
+syntax="proto3";
+
+package notification;
+
+option go_package="./pb";
+
+import "google/protobuf/empty.proto";
+
+service NotificationService {
+    rpc SendOTP(SendOTPRequest) returns (google.protobuf.Empty);
+    rpc VerifyOTP(VerifyOTPRequest) returns (VerifyOTPResponse);
+}
+
+message SendOTPRequest {
+    string email=1;
+}
+
+message VerifyOTPRequest {
+    string otp=1;
+    string email=2;
+}
+
+message VerifyOTPResponse {
+    bool isVerified=1;
+}
