@@ -7,7 +7,8 @@ option go_package="./pb";
 import "google/protobuf/empty.proto";
 
 service UserService {
-    rpc UserSignup(UserSignUpRequest) returns (UserSignUpResponse);
+    rpc ClientSignup(UserSignUpRequest) returns (UserSignUpResponse);
+    rpc FreelancerSignup(FreelancerSignUpRequest) returns (FreelancerSignUpResponse);
     rpc CreateProfile(GetUserById) returns (google.protobuf.Empty);
 }
 
@@ -23,6 +24,21 @@ message UserSignUpResponse {
     string email  = 2;
     string name = 3;
     string phone = 4;
+}
+message FreelancerSignUpRequest {
+    string name = 1;
+    string email = 2;
+    string phone = 3;
+    int32 categoryId = 4;
+    string password = 5;
+    string OTP = 6;
+}
+message FreelancerSignUpResponse {
+    string id = 1;
+    string email = 2;
+    string name = 3;
+    string phone = 4;
+    int32 categoryId = 5;
 }
 message GetUserById {
     string id = 1;

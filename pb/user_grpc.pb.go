@@ -23,7 +23,8 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
-	UserSignup(ctx context.Context, in *UserSignUpRequest, opts ...grpc.CallOption) (*UserSignUpResponse, error)
+	ClientSignup(ctx context.Context, in *UserSignUpRequest, opts ...grpc.CallOption) (*UserSignUpResponse, error)
+	FreelancerSignup(ctx context.Context, in *FreelancerSignUpRequest, opts ...grpc.CallOption) (*FreelancerSignUpResponse, error)
 	CreateProfile(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
@@ -35,9 +36,18 @@ func NewUserServiceClient(cc grpc.ClientConnInterface) UserServiceClient {
 	return &userServiceClient{cc}
 }
 
-func (c *userServiceClient) UserSignup(ctx context.Context, in *UserSignUpRequest, opts ...grpc.CallOption) (*UserSignUpResponse, error) {
+func (c *userServiceClient) ClientSignup(ctx context.Context, in *UserSignUpRequest, opts ...grpc.CallOption) (*UserSignUpResponse, error) {
 	out := new(UserSignUpResponse)
-	err := c.cc.Invoke(ctx, "/user.UserService/UserSignup", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/user.UserService/ClientSignup", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) FreelancerSignup(ctx context.Context, in *FreelancerSignUpRequest, opts ...grpc.CallOption) (*FreelancerSignUpResponse, error) {
+	out := new(FreelancerSignUpResponse)
+	err := c.cc.Invoke(ctx, "/user.UserService/FreelancerSignup", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +67,8 @@ func (c *userServiceClient) CreateProfile(ctx context.Context, in *GetUserById, 
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
 type UserServiceServer interface {
-	UserSignup(context.Context, *UserSignUpRequest) (*UserSignUpResponse, error)
+	ClientSignup(context.Context, *UserSignUpRequest) (*UserSignUpResponse, error)
+	FreelancerSignup(context.Context, *FreelancerSignUpRequest) (*FreelancerSignUpResponse, error)
 	CreateProfile(context.Context, *GetUserById) (*emptypb.Empty, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
@@ -66,8 +77,11 @@ type UserServiceServer interface {
 type UnimplementedUserServiceServer struct {
 }
 
-func (UnimplementedUserServiceServer) UserSignup(context.Context, *UserSignUpRequest) (*UserSignUpResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UserSignup not implemented")
+func (UnimplementedUserServiceServer) ClientSignup(context.Context, *UserSignUpRequest) (*UserSignUpResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ClientSignup not implemented")
+}
+func (UnimplementedUserServiceServer) FreelancerSignup(context.Context, *FreelancerSignUpRequest) (*FreelancerSignUpResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FreelancerSignup not implemented")
 }
 func (UnimplementedUserServiceServer) CreateProfile(context.Context, *GetUserById) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateProfile not implemented")
@@ -85,20 +99,38 @@ func RegisterUserServiceServer(s grpc.ServiceRegistrar, srv UserServiceServer) {
 	s.RegisterService(&UserService_ServiceDesc, srv)
 }
 
-func _UserService_UserSignup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserService_ClientSignup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UserSignUpRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServiceServer).UserSignup(ctx, in)
+		return srv.(UserServiceServer).ClientSignup(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/user.UserService/UserSignup",
+		FullMethod: "/user.UserService/ClientSignup",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).UserSignup(ctx, req.(*UserSignUpRequest))
+		return srv.(UserServiceServer).ClientSignup(ctx, req.(*UserSignUpRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_FreelancerSignup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FreelancerSignUpRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).FreelancerSignup(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/FreelancerSignup",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).FreelancerSignup(ctx, req.(*FreelancerSignUpRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -129,8 +161,12 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*UserServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "UserSignup",
-			Handler:    _UserService_UserSignup_Handler,
+			MethodName: "ClientSignup",
+			Handler:    _UserService_ClientSignup_Handler,
+		},
+		{
+			MethodName: "FreelancerSignup",
+			Handler:    _UserService_FreelancerSignup_Handler,
 		},
 		{
 			MethodName: "CreateProfile",
