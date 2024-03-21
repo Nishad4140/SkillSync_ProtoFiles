@@ -13,6 +13,10 @@ service UserService {
     rpc FreelancerLogin(LoginRequest) returns (FreelancerSignUpResponse);
     rpc AdminLogin(LoginRequest) returns (ClientSignUpResponse);
     rpc CreateProfile(GetUserById) returns (google.protobuf.Empty);
+    rpc AddCategory(AddCategoryRequest) returns (google.protobuf.Empty);
+    rpc UpdateCategory(UpdateCategoryRequest) returns (google.protobuf.Empty);
+    rpc GetAllCategory(google.protobuf.Empty) returns (stream UpdateCategoryRequest);
+    
 }
 
 message ClientSignUpRequest {
@@ -49,4 +53,11 @@ message LoginRequest {
 }
 message GetUserById {
     string id = 1;
+}
+message AddCategoryRequest {
+    string category = 1;
+}
+message UpdateCategoryRequest {
+    int32 id = 1;
+    string category = 2;
 }

@@ -29,6 +29,9 @@ type UserServiceClient interface {
 	FreelancerLogin(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*FreelancerSignUpResponse, error)
 	AdminLogin(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*ClientSignUpResponse, error)
 	CreateProfile(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	AddCategory(ctx context.Context, in *AddCategoryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UpdateCategory(ctx context.Context, in *UpdateCategoryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetAllCategory(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (UserService_GetAllCategoryClient, error)
 }
 
 type userServiceClient struct {
@@ -93,6 +96,56 @@ func (c *userServiceClient) CreateProfile(ctx context.Context, in *GetUserById, 
 	return out, nil
 }
 
+func (c *userServiceClient) AddCategory(ctx context.Context, in *AddCategoryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/AddCategory", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) UpdateCategory(ctx context.Context, in *UpdateCategoryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/UpdateCategory", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) GetAllCategory(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (UserService_GetAllCategoryClient, error) {
+	stream, err := c.cc.NewStream(ctx, &UserService_ServiceDesc.Streams[0], "/user.UserService/GetAllCategory", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &userServiceGetAllCategoryClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type UserService_GetAllCategoryClient interface {
+	Recv() (*UpdateCategoryRequest, error)
+	grpc.ClientStream
+}
+
+type userServiceGetAllCategoryClient struct {
+	grpc.ClientStream
+}
+
+func (x *userServiceGetAllCategoryClient) Recv() (*UpdateCategoryRequest, error) {
+	m := new(UpdateCategoryRequest)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -103,6 +156,9 @@ type UserServiceServer interface {
 	FreelancerLogin(context.Context, *LoginRequest) (*FreelancerSignUpResponse, error)
 	AdminLogin(context.Context, *LoginRequest) (*ClientSignUpResponse, error)
 	CreateProfile(context.Context, *GetUserById) (*emptypb.Empty, error)
+	AddCategory(context.Context, *AddCategoryRequest) (*emptypb.Empty, error)
+	UpdateCategory(context.Context, *UpdateCategoryRequest) (*emptypb.Empty, error)
+	GetAllCategory(*emptypb.Empty, UserService_GetAllCategoryServer) error
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -127,6 +183,15 @@ func (UnimplementedUserServiceServer) AdminLogin(context.Context, *LoginRequest)
 }
 func (UnimplementedUserServiceServer) CreateProfile(context.Context, *GetUserById) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateProfile not implemented")
+}
+func (UnimplementedUserServiceServer) AddCategory(context.Context, *AddCategoryRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddCategory not implemented")
+}
+func (UnimplementedUserServiceServer) UpdateCategory(context.Context, *UpdateCategoryRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateCategory not implemented")
+}
+func (UnimplementedUserServiceServer) GetAllCategory(*emptypb.Empty, UserService_GetAllCategoryServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetAllCategory not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -249,6 +314,63 @@ func _UserService_CreateProfile_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_AddCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddCategoryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).AddCategory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/AddCategory",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).AddCategory(ctx, req.(*AddCategoryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_UpdateCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateCategoryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).UpdateCategory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/UpdateCategory",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).UpdateCategory(ctx, req.(*UpdateCategoryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_GetAllCategory_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(emptypb.Empty)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(UserServiceServer).GetAllCategory(m, &userServiceGetAllCategoryServer{stream})
+}
+
+type UserService_GetAllCategoryServer interface {
+	Send(*UpdateCategoryRequest) error
+	grpc.ServerStream
+}
+
+type userServiceGetAllCategoryServer struct {
+	grpc.ServerStream
+}
+
+func (x *userServiceGetAllCategoryServer) Send(m *UpdateCategoryRequest) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -280,7 +402,21 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "CreateProfile",
 			Handler:    _UserService_CreateProfile_Handler,
 		},
+		{
+			MethodName: "AddCategory",
+			Handler:    _UserService_AddCategory_Handler,
+		},
+		{
+			MethodName: "UpdateCategory",
+			Handler:    _UserService_UpdateCategory_Handler,
+		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "GetAllCategory",
+			Handler:       _UserService_GetAllCategory_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "user.proto",
 }
