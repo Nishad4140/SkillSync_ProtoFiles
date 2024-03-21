@@ -4,8 +4,11 @@ package user;
 
 option go_package="./pb";
 
+import "google/protobuf/empty.proto";
+
 service UserService {
     rpc UserSignup(UserSignUpRequest) returns (UserSignUpResponse);
+    rpc CreateProfile(GetUserById) returns (google.protobuf.Empty);
 }
 
 message UserSignUpRequest {
@@ -20,4 +23,7 @@ message UserSignUpResponse {
     string email  = 2;
     string name = 3;
     string phone = 4;
+}
+message GetUserById {
+    string id = 1;
 }
