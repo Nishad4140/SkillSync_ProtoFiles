@@ -22,6 +22,10 @@ service UserService {
     rpc ClientAddAddress(AddAddressRequest) returns (google.protobuf.Empty);
     rpc CLientUpdateAddress(AddressResponse) returns (google.protobuf.Empty);
     rpc ClientGetAddress(GetUserById) returns (AddressResponse);
+    rpc BlockClient(GetUserById) returns (google.protobuf.Empty);
+    rpc UnBlockClient(GetUserById) returns (google.protobuf.Empty);
+    rpc BlockFreelancer(GetUserById) returns (google.protobuf.Empty);
+    rpc UnBlockFreelancer(GetUserById) returns (google.protobuf.Empty);
 }
 
 message ClientSignUpRequest {

@@ -38,6 +38,10 @@ type UserServiceClient interface {
 	ClientAddAddress(ctx context.Context, in *AddAddressRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	CLientUpdateAddress(ctx context.Context, in *AddressResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ClientGetAddress(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*AddressResponse, error)
+	BlockClient(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UnBlockClient(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	BlockFreelancer(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UnBlockFreelancer(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type userServiceClient struct {
@@ -229,6 +233,42 @@ func (c *userServiceClient) ClientGetAddress(ctx context.Context, in *GetUserByI
 	return out, nil
 }
 
+func (c *userServiceClient) BlockClient(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/BlockClient", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) UnBlockClient(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/UnBlockClient", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) BlockFreelancer(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/BlockFreelancer", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) UnBlockFreelancer(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/UnBlockFreelancer", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -248,6 +288,10 @@ type UserServiceServer interface {
 	ClientAddAddress(context.Context, *AddAddressRequest) (*emptypb.Empty, error)
 	CLientUpdateAddress(context.Context, *AddressResponse) (*emptypb.Empty, error)
 	ClientGetAddress(context.Context, *GetUserById) (*AddressResponse, error)
+	BlockClient(context.Context, *GetUserById) (*emptypb.Empty, error)
+	UnBlockClient(context.Context, *GetUserById) (*emptypb.Empty, error)
+	BlockFreelancer(context.Context, *GetUserById) (*emptypb.Empty, error)
+	UnBlockFreelancer(context.Context, *GetUserById) (*emptypb.Empty, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -299,6 +343,18 @@ func (UnimplementedUserServiceServer) CLientUpdateAddress(context.Context, *Addr
 }
 func (UnimplementedUserServiceServer) ClientGetAddress(context.Context, *GetUserById) (*AddressResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ClientGetAddress not implemented")
+}
+func (UnimplementedUserServiceServer) BlockClient(context.Context, *GetUserById) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BlockClient not implemented")
+}
+func (UnimplementedUserServiceServer) UnBlockClient(context.Context, *GetUserById) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UnBlockClient not implemented")
+}
+func (UnimplementedUserServiceServer) BlockFreelancer(context.Context, *GetUserById) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BlockFreelancer not implemented")
+}
+func (UnimplementedUserServiceServer) UnBlockFreelancer(context.Context, *GetUserById) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UnBlockFreelancer not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -589,6 +645,78 @@ func _UserService_ClientGetAddress_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_BlockClient_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserById)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).BlockClient(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/BlockClient",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).BlockClient(ctx, req.(*GetUserById))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_UnBlockClient_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserById)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).UnBlockClient(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/UnBlockClient",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).UnBlockClient(ctx, req.(*GetUserById))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_BlockFreelancer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserById)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).BlockFreelancer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/BlockFreelancer",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).BlockFreelancer(ctx, req.(*GetUserById))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_UnBlockFreelancer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserById)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).UnBlockFreelancer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/UnBlockFreelancer",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).UnBlockFreelancer(ctx, req.(*GetUserById))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -647,6 +775,22 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ClientGetAddress",
 			Handler:    _UserService_ClientGetAddress_Handler,
+		},
+		{
+			MethodName: "BlockClient",
+			Handler:    _UserService_BlockClient_Handler,
+		},
+		{
+			MethodName: "UnBlockClient",
+			Handler:    _UserService_UnBlockClient_Handler,
+		},
+		{
+			MethodName: "BlockFreelancer",
+			Handler:    _UserService_BlockFreelancer_Handler,
+		},
+		{
+			MethodName: "UnBlockFreelancer",
+			Handler:    _UserService_UnBlockFreelancer_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
