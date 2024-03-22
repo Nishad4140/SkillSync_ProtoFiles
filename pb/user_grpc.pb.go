@@ -28,10 +28,13 @@ type UserServiceClient interface {
 	ClientLogin(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*ClientSignUpResponse, error)
 	FreelancerLogin(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*FreelancerSignUpResponse, error)
 	AdminLogin(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*ClientSignUpResponse, error)
-	CreateProfile(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ClientCreateProfile(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	AddCategory(ctx context.Context, in *AddCategoryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UpdateCategory(ctx context.Context, in *UpdateCategoryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetAllCategory(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (UserService_GetAllCategoryClient, error)
+	AdminAddSkill(ctx context.Context, in *AddSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	AdminUpdateSkill(ctx context.Context, in *SkillResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetAllSkills(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (UserService_GetAllSkillsClient, error)
 	ClientAddAddress(ctx context.Context, in *AddAddressRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	CLientUpdateAddress(ctx context.Context, in *AddressResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ClientGetAddress(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*AddressResponse, error)
@@ -90,9 +93,9 @@ func (c *userServiceClient) AdminLogin(ctx context.Context, in *LoginRequest, op
 	return out, nil
 }
 
-func (c *userServiceClient) CreateProfile(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *userServiceClient) ClientCreateProfile(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/user.UserService/CreateProfile", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/user.UserService/ClientCreateProfile", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -149,6 +152,56 @@ func (x *userServiceGetAllCategoryClient) Recv() (*UpdateCategoryRequest, error)
 	return m, nil
 }
 
+func (c *userServiceClient) AdminAddSkill(ctx context.Context, in *AddSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/AdminAddSkill", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) AdminUpdateSkill(ctx context.Context, in *SkillResponse, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/AdminUpdateSkill", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) GetAllSkills(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (UserService_GetAllSkillsClient, error) {
+	stream, err := c.cc.NewStream(ctx, &UserService_ServiceDesc.Streams[1], "/user.UserService/GetAllSkills", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &userServiceGetAllSkillsClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type UserService_GetAllSkillsClient interface {
+	Recv() (*SkillResponse, error)
+	grpc.ClientStream
+}
+
+type userServiceGetAllSkillsClient struct {
+	grpc.ClientStream
+}
+
+func (x *userServiceGetAllSkillsClient) Recv() (*SkillResponse, error) {
+	m := new(SkillResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 func (c *userServiceClient) ClientAddAddress(ctx context.Context, in *AddAddressRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/user.UserService/ClientAddAddress", in, out, opts...)
@@ -185,10 +238,13 @@ type UserServiceServer interface {
 	ClientLogin(context.Context, *LoginRequest) (*ClientSignUpResponse, error)
 	FreelancerLogin(context.Context, *LoginRequest) (*FreelancerSignUpResponse, error)
 	AdminLogin(context.Context, *LoginRequest) (*ClientSignUpResponse, error)
-	CreateProfile(context.Context, *GetUserById) (*emptypb.Empty, error)
+	ClientCreateProfile(context.Context, *GetUserById) (*emptypb.Empty, error)
 	AddCategory(context.Context, *AddCategoryRequest) (*emptypb.Empty, error)
 	UpdateCategory(context.Context, *UpdateCategoryRequest) (*emptypb.Empty, error)
 	GetAllCategory(*emptypb.Empty, UserService_GetAllCategoryServer) error
+	AdminAddSkill(context.Context, *AddSkillRequest) (*emptypb.Empty, error)
+	AdminUpdateSkill(context.Context, *SkillResponse) (*emptypb.Empty, error)
+	GetAllSkills(*emptypb.Empty, UserService_GetAllSkillsServer) error
 	ClientAddAddress(context.Context, *AddAddressRequest) (*emptypb.Empty, error)
 	CLientUpdateAddress(context.Context, *AddressResponse) (*emptypb.Empty, error)
 	ClientGetAddress(context.Context, *GetUserById) (*AddressResponse, error)
@@ -214,8 +270,8 @@ func (UnimplementedUserServiceServer) FreelancerLogin(context.Context, *LoginReq
 func (UnimplementedUserServiceServer) AdminLogin(context.Context, *LoginRequest) (*ClientSignUpResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AdminLogin not implemented")
 }
-func (UnimplementedUserServiceServer) CreateProfile(context.Context, *GetUserById) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateProfile not implemented")
+func (UnimplementedUserServiceServer) ClientCreateProfile(context.Context, *GetUserById) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ClientCreateProfile not implemented")
 }
 func (UnimplementedUserServiceServer) AddCategory(context.Context, *AddCategoryRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddCategory not implemented")
@@ -225,6 +281,15 @@ func (UnimplementedUserServiceServer) UpdateCategory(context.Context, *UpdateCat
 }
 func (UnimplementedUserServiceServer) GetAllCategory(*emptypb.Empty, UserService_GetAllCategoryServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetAllCategory not implemented")
+}
+func (UnimplementedUserServiceServer) AdminAddSkill(context.Context, *AddSkillRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AdminAddSkill not implemented")
+}
+func (UnimplementedUserServiceServer) AdminUpdateSkill(context.Context, *SkillResponse) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AdminUpdateSkill not implemented")
+}
+func (UnimplementedUserServiceServer) GetAllSkills(*emptypb.Empty, UserService_GetAllSkillsServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetAllSkills not implemented")
 }
 func (UnimplementedUserServiceServer) ClientAddAddress(context.Context, *AddAddressRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ClientAddAddress not implemented")
@@ -338,20 +403,20 @@ func _UserService_AdminLogin_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_CreateProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserService_ClientCreateProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetUserById)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServiceServer).CreateProfile(ctx, in)
+		return srv.(UserServiceServer).ClientCreateProfile(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/user.UserService/CreateProfile",
+		FullMethod: "/user.UserService/ClientCreateProfile",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).CreateProfile(ctx, req.(*GetUserById))
+		return srv.(UserServiceServer).ClientCreateProfile(ctx, req.(*GetUserById))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -410,6 +475,63 @@ type userServiceGetAllCategoryServer struct {
 }
 
 func (x *userServiceGetAllCategoryServer) Send(m *UpdateCategoryRequest) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func _UserService_AdminAddSkill_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddSkillRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).AdminAddSkill(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/AdminAddSkill",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).AdminAddSkill(ctx, req.(*AddSkillRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_AdminUpdateSkill_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SkillResponse)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).AdminUpdateSkill(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/AdminUpdateSkill",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).AdminUpdateSkill(ctx, req.(*SkillResponse))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_GetAllSkills_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(emptypb.Empty)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(UserServiceServer).GetAllSkills(m, &userServiceGetAllSkillsServer{stream})
+}
+
+type UserService_GetAllSkillsServer interface {
+	Send(*SkillResponse) error
+	grpc.ServerStream
+}
+
+type userServiceGetAllSkillsServer struct {
+	grpc.ServerStream
+}
+
+func (x *userServiceGetAllSkillsServer) Send(m *SkillResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
@@ -495,8 +617,8 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_AdminLogin_Handler,
 		},
 		{
-			MethodName: "CreateProfile",
-			Handler:    _UserService_CreateProfile_Handler,
+			MethodName: "ClientCreateProfile",
+			Handler:    _UserService_ClientCreateProfile_Handler,
 		},
 		{
 			MethodName: "AddCategory",
@@ -505,6 +627,14 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateCategory",
 			Handler:    _UserService_UpdateCategory_Handler,
+		},
+		{
+			MethodName: "AdminAddSkill",
+			Handler:    _UserService_AdminAddSkill_Handler,
+		},
+		{
+			MethodName: "AdminUpdateSkill",
+			Handler:    _UserService_AdminUpdateSkill_Handler,
 		},
 		{
 			MethodName: "ClientAddAddress",
@@ -523,6 +653,11 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "GetAllCategory",
 			Handler:       _UserService_GetAllCategory_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "GetAllSkills",
+			Handler:       _UserService_GetAllSkills_Handler,
 			ServerStreams: true,
 		},
 	},

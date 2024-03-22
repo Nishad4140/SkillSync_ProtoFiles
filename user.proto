@@ -12,10 +12,13 @@ service UserService {
     rpc ClientLogin(LoginRequest) returns (ClientSignUpResponse);
     rpc FreelancerLogin(LoginRequest) returns (FreelancerSignUpResponse);
     rpc AdminLogin(LoginRequest) returns (ClientSignUpResponse);
-    rpc CreateProfile(GetUserById) returns (google.protobuf.Empty);
+    rpc ClientCreateProfile(GetUserById) returns (google.protobuf.Empty);
     rpc AddCategory(AddCategoryRequest) returns (google.protobuf.Empty);
     rpc UpdateCategory(UpdateCategoryRequest) returns (google.protobuf.Empty);
     rpc GetAllCategory(google.protobuf.Empty) returns (stream UpdateCategoryRequest);
+    rpc AdminAddSkill(AddSkillRequest) returns (google.protobuf.Empty);
+    rpc AdminUpdateSkill(SkillResponse) returns (google.protobuf.Empty);
+    rpc GetAllSkills(google.protobuf.Empty) returns (stream SkillResponse);
     rpc ClientAddAddress(AddAddressRequest) returns (google.protobuf.Empty);
     rpc CLientUpdateAddress(AddressResponse) returns (google.protobuf.Empty);
     rpc ClientGetAddress(GetUserById) returns (AddressResponse);
@@ -77,4 +80,14 @@ message AddressResponse {
     string district = 4;
     string city = 5;
     string userId = 6;
+}
+message AddSkillRequest {
+    string skill = 1;
+    int32 categoryId = 2;
+}
+message SkillResponse {
+    int32 id = 1;
+    string skill = 2;
+    int32 categoryId = 3;
+    string category = 4;
 }
