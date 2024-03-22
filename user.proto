@@ -16,7 +16,9 @@ service UserService {
     rpc AddCategory(AddCategoryRequest) returns (google.protobuf.Empty);
     rpc UpdateCategory(UpdateCategoryRequest) returns (google.protobuf.Empty);
     rpc GetAllCategory(google.protobuf.Empty) returns (stream UpdateCategoryRequest);
-    
+    rpc ClientAddAddress(AddAddressRequest) returns (google.protobuf.Empty);
+    rpc CLientUpdateAddress(AddressResponse) returns (google.protobuf.Empty);
+    rpc ClientGetAddress(GetUserById) returns (AddressResponse);
 }
 
 message ClientSignUpRequest {
@@ -60,4 +62,19 @@ message AddCategoryRequest {
 message UpdateCategoryRequest {
     int32 id = 1;
     string category = 2;
+}
+message AddAddressRequest {
+    string country = 1;
+    string state = 2;
+    string district = 3;
+    string city = 4;
+    string userId = 5;
+}
+message AddressResponse {
+    string id = 1;
+    string country = 2;
+    string state = 3;
+    string district = 4;
+    string city = 5;
+    string userId = 6;
 }

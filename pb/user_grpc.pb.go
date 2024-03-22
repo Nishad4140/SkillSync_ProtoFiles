@@ -32,6 +32,9 @@ type UserServiceClient interface {
 	AddCategory(ctx context.Context, in *AddCategoryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UpdateCategory(ctx context.Context, in *UpdateCategoryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetAllCategory(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (UserService_GetAllCategoryClient, error)
+	ClientAddAddress(ctx context.Context, in *AddAddressRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	CLientUpdateAddress(ctx context.Context, in *AddressResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ClientGetAddress(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*AddressResponse, error)
 }
 
 type userServiceClient struct {
@@ -146,6 +149,33 @@ func (x *userServiceGetAllCategoryClient) Recv() (*UpdateCategoryRequest, error)
 	return m, nil
 }
 
+func (c *userServiceClient) ClientAddAddress(ctx context.Context, in *AddAddressRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/ClientAddAddress", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) CLientUpdateAddress(ctx context.Context, in *AddressResponse, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/CLientUpdateAddress", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) ClientGetAddress(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*AddressResponse, error) {
+	out := new(AddressResponse)
+	err := c.cc.Invoke(ctx, "/user.UserService/ClientGetAddress", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -159,6 +189,9 @@ type UserServiceServer interface {
 	AddCategory(context.Context, *AddCategoryRequest) (*emptypb.Empty, error)
 	UpdateCategory(context.Context, *UpdateCategoryRequest) (*emptypb.Empty, error)
 	GetAllCategory(*emptypb.Empty, UserService_GetAllCategoryServer) error
+	ClientAddAddress(context.Context, *AddAddressRequest) (*emptypb.Empty, error)
+	CLientUpdateAddress(context.Context, *AddressResponse) (*emptypb.Empty, error)
+	ClientGetAddress(context.Context, *GetUserById) (*AddressResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -192,6 +225,15 @@ func (UnimplementedUserServiceServer) UpdateCategory(context.Context, *UpdateCat
 }
 func (UnimplementedUserServiceServer) GetAllCategory(*emptypb.Empty, UserService_GetAllCategoryServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetAllCategory not implemented")
+}
+func (UnimplementedUserServiceServer) ClientAddAddress(context.Context, *AddAddressRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ClientAddAddress not implemented")
+}
+func (UnimplementedUserServiceServer) CLientUpdateAddress(context.Context, *AddressResponse) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CLientUpdateAddress not implemented")
+}
+func (UnimplementedUserServiceServer) ClientGetAddress(context.Context, *GetUserById) (*AddressResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ClientGetAddress not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -371,6 +413,60 @@ func (x *userServiceGetAllCategoryServer) Send(m *UpdateCategoryRequest) error {
 	return x.ServerStream.SendMsg(m)
 }
 
+func _UserService_ClientAddAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddAddressRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).ClientAddAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/ClientAddAddress",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).ClientAddAddress(ctx, req.(*AddAddressRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_CLientUpdateAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddressResponse)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).CLientUpdateAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/CLientUpdateAddress",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).CLientUpdateAddress(ctx, req.(*AddressResponse))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_ClientGetAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserById)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).ClientGetAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/ClientGetAddress",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).ClientGetAddress(ctx, req.(*GetUserById))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -409,6 +505,18 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateCategory",
 			Handler:    _UserService_UpdateCategory_Handler,
+		},
+		{
+			MethodName: "ClientAddAddress",
+			Handler:    _UserService_ClientAddAddress_Handler,
+		},
+		{
+			MethodName: "CLientUpdateAddress",
+			Handler:    _UserService_CLientUpdateAddress_Handler,
+		},
+		{
+			MethodName: "ClientGetAddress",
+			Handler:    _UserService_ClientGetAddress_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
