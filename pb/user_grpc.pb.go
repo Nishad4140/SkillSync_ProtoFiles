@@ -29,15 +29,20 @@ type UserServiceClient interface {
 	FreelancerLogin(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*FreelancerSignUpResponse, error)
 	AdminLogin(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*ClientSignUpResponse, error)
 	ClientCreateProfile(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	FreelancerCreateProfile(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	AddCategory(ctx context.Context, in *AddCategoryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UpdateCategory(ctx context.Context, in *UpdateCategoryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetAllCategory(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (UserService_GetAllCategoryClient, error)
+	GetCategoryById(ctx context.Context, in *GetCategoryByIdRequest, opts ...grpc.CallOption) (*UpdateCategoryRequest, error)
 	AdminAddSkill(ctx context.Context, in *AddSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	AdminUpdateSkill(ctx context.Context, in *SkillResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetAllSkills(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (UserService_GetAllSkillsClient, error)
 	ClientAddAddress(ctx context.Context, in *AddAddressRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	CLientUpdateAddress(ctx context.Context, in *AddressResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ClientUpdateAddress(ctx context.Context, in *AddressResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ClientGetAddress(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*AddressResponse, error)
+	FreelancerAddAddress(ctx context.Context, in *AddAddressRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	FreelancerUpdateAddress(ctx context.Context, in *AddressResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	FreelancerGetAddress(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*AddressResponse, error)
 	BlockClient(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UnBlockClient(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	BlockFreelancer(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -106,6 +111,15 @@ func (c *userServiceClient) ClientCreateProfile(ctx context.Context, in *GetUser
 	return out, nil
 }
 
+func (c *userServiceClient) FreelancerCreateProfile(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/FreelancerCreateProfile", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) AddCategory(ctx context.Context, in *AddCategoryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/user.UserService/AddCategory", in, out, opts...)
@@ -154,6 +168,15 @@ func (x *userServiceGetAllCategoryClient) Recv() (*UpdateCategoryRequest, error)
 		return nil, err
 	}
 	return m, nil
+}
+
+func (c *userServiceClient) GetCategoryById(ctx context.Context, in *GetCategoryByIdRequest, opts ...grpc.CallOption) (*UpdateCategoryRequest, error) {
+	out := new(UpdateCategoryRequest)
+	err := c.cc.Invoke(ctx, "/user.UserService/GetCategoryById", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *userServiceClient) AdminAddSkill(ctx context.Context, in *AddSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
@@ -215,9 +238,9 @@ func (c *userServiceClient) ClientAddAddress(ctx context.Context, in *AddAddress
 	return out, nil
 }
 
-func (c *userServiceClient) CLientUpdateAddress(ctx context.Context, in *AddressResponse, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *userServiceClient) ClientUpdateAddress(ctx context.Context, in *AddressResponse, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/user.UserService/CLientUpdateAddress", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/user.UserService/ClientUpdateAddress", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -227,6 +250,33 @@ func (c *userServiceClient) CLientUpdateAddress(ctx context.Context, in *Address
 func (c *userServiceClient) ClientGetAddress(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*AddressResponse, error) {
 	out := new(AddressResponse)
 	err := c.cc.Invoke(ctx, "/user.UserService/ClientGetAddress", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) FreelancerAddAddress(ctx context.Context, in *AddAddressRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/FreelancerAddAddress", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) FreelancerUpdateAddress(ctx context.Context, in *AddressResponse, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/FreelancerUpdateAddress", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) FreelancerGetAddress(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*AddressResponse, error) {
+	out := new(AddressResponse)
+	err := c.cc.Invoke(ctx, "/user.UserService/FreelancerGetAddress", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -279,15 +329,20 @@ type UserServiceServer interface {
 	FreelancerLogin(context.Context, *LoginRequest) (*FreelancerSignUpResponse, error)
 	AdminLogin(context.Context, *LoginRequest) (*ClientSignUpResponse, error)
 	ClientCreateProfile(context.Context, *GetUserById) (*emptypb.Empty, error)
+	FreelancerCreateProfile(context.Context, *GetUserById) (*emptypb.Empty, error)
 	AddCategory(context.Context, *AddCategoryRequest) (*emptypb.Empty, error)
 	UpdateCategory(context.Context, *UpdateCategoryRequest) (*emptypb.Empty, error)
 	GetAllCategory(*emptypb.Empty, UserService_GetAllCategoryServer) error
+	GetCategoryById(context.Context, *GetCategoryByIdRequest) (*UpdateCategoryRequest, error)
 	AdminAddSkill(context.Context, *AddSkillRequest) (*emptypb.Empty, error)
 	AdminUpdateSkill(context.Context, *SkillResponse) (*emptypb.Empty, error)
 	GetAllSkills(*emptypb.Empty, UserService_GetAllSkillsServer) error
 	ClientAddAddress(context.Context, *AddAddressRequest) (*emptypb.Empty, error)
-	CLientUpdateAddress(context.Context, *AddressResponse) (*emptypb.Empty, error)
+	ClientUpdateAddress(context.Context, *AddressResponse) (*emptypb.Empty, error)
 	ClientGetAddress(context.Context, *GetUserById) (*AddressResponse, error)
+	FreelancerAddAddress(context.Context, *AddAddressRequest) (*emptypb.Empty, error)
+	FreelancerUpdateAddress(context.Context, *AddressResponse) (*emptypb.Empty, error)
+	FreelancerGetAddress(context.Context, *GetUserById) (*AddressResponse, error)
 	BlockClient(context.Context, *GetUserById) (*emptypb.Empty, error)
 	UnBlockClient(context.Context, *GetUserById) (*emptypb.Empty, error)
 	BlockFreelancer(context.Context, *GetUserById) (*emptypb.Empty, error)
@@ -317,6 +372,9 @@ func (UnimplementedUserServiceServer) AdminLogin(context.Context, *LoginRequest)
 func (UnimplementedUserServiceServer) ClientCreateProfile(context.Context, *GetUserById) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ClientCreateProfile not implemented")
 }
+func (UnimplementedUserServiceServer) FreelancerCreateProfile(context.Context, *GetUserById) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FreelancerCreateProfile not implemented")
+}
 func (UnimplementedUserServiceServer) AddCategory(context.Context, *AddCategoryRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddCategory not implemented")
 }
@@ -325,6 +383,9 @@ func (UnimplementedUserServiceServer) UpdateCategory(context.Context, *UpdateCat
 }
 func (UnimplementedUserServiceServer) GetAllCategory(*emptypb.Empty, UserService_GetAllCategoryServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetAllCategory not implemented")
+}
+func (UnimplementedUserServiceServer) GetCategoryById(context.Context, *GetCategoryByIdRequest) (*UpdateCategoryRequest, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCategoryById not implemented")
 }
 func (UnimplementedUserServiceServer) AdminAddSkill(context.Context, *AddSkillRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AdminAddSkill not implemented")
@@ -338,11 +399,20 @@ func (UnimplementedUserServiceServer) GetAllSkills(*emptypb.Empty, UserService_G
 func (UnimplementedUserServiceServer) ClientAddAddress(context.Context, *AddAddressRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ClientAddAddress not implemented")
 }
-func (UnimplementedUserServiceServer) CLientUpdateAddress(context.Context, *AddressResponse) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CLientUpdateAddress not implemented")
+func (UnimplementedUserServiceServer) ClientUpdateAddress(context.Context, *AddressResponse) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ClientUpdateAddress not implemented")
 }
 func (UnimplementedUserServiceServer) ClientGetAddress(context.Context, *GetUserById) (*AddressResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ClientGetAddress not implemented")
+}
+func (UnimplementedUserServiceServer) FreelancerAddAddress(context.Context, *AddAddressRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FreelancerAddAddress not implemented")
+}
+func (UnimplementedUserServiceServer) FreelancerUpdateAddress(context.Context, *AddressResponse) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FreelancerUpdateAddress not implemented")
+}
+func (UnimplementedUserServiceServer) FreelancerGetAddress(context.Context, *GetUserById) (*AddressResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FreelancerGetAddress not implemented")
 }
 func (UnimplementedUserServiceServer) BlockClient(context.Context, *GetUserById) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BlockClient not implemented")
@@ -477,6 +547,24 @@ func _UserService_ClientCreateProfile_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_FreelancerCreateProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserById)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).FreelancerCreateProfile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/FreelancerCreateProfile",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).FreelancerCreateProfile(ctx, req.(*GetUserById))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_AddCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddCategoryRequest)
 	if err := dec(in); err != nil {
@@ -532,6 +620,24 @@ type userServiceGetAllCategoryServer struct {
 
 func (x *userServiceGetAllCategoryServer) Send(m *UpdateCategoryRequest) error {
 	return x.ServerStream.SendMsg(m)
+}
+
+func _UserService_GetCategoryById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCategoryByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetCategoryById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/GetCategoryById",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetCategoryById(ctx, req.(*GetCategoryByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _UserService_AdminAddSkill_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -609,20 +715,20 @@ func _UserService_ClientAddAddress_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_CLientUpdateAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserService_ClientUpdateAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddressResponse)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServiceServer).CLientUpdateAddress(ctx, in)
+		return srv.(UserServiceServer).ClientUpdateAddress(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/user.UserService/CLientUpdateAddress",
+		FullMethod: "/user.UserService/ClientUpdateAddress",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).CLientUpdateAddress(ctx, req.(*AddressResponse))
+		return srv.(UserServiceServer).ClientUpdateAddress(ctx, req.(*AddressResponse))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -641,6 +747,60 @@ func _UserService_ClientGetAddress_Handler(srv interface{}, ctx context.Context,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).ClientGetAddress(ctx, req.(*GetUserById))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_FreelancerAddAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddAddressRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).FreelancerAddAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/FreelancerAddAddress",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).FreelancerAddAddress(ctx, req.(*AddAddressRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_FreelancerUpdateAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddressResponse)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).FreelancerUpdateAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/FreelancerUpdateAddress",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).FreelancerUpdateAddress(ctx, req.(*AddressResponse))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_FreelancerGetAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserById)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).FreelancerGetAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/FreelancerGetAddress",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).FreelancerGetAddress(ctx, req.(*GetUserById))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -749,12 +909,20 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_ClientCreateProfile_Handler,
 		},
 		{
+			MethodName: "FreelancerCreateProfile",
+			Handler:    _UserService_FreelancerCreateProfile_Handler,
+		},
+		{
 			MethodName: "AddCategory",
 			Handler:    _UserService_AddCategory_Handler,
 		},
 		{
 			MethodName: "UpdateCategory",
 			Handler:    _UserService_UpdateCategory_Handler,
+		},
+		{
+			MethodName: "GetCategoryById",
+			Handler:    _UserService_GetCategoryById_Handler,
 		},
 		{
 			MethodName: "AdminAddSkill",
@@ -769,12 +937,24 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_ClientAddAddress_Handler,
 		},
 		{
-			MethodName: "CLientUpdateAddress",
-			Handler:    _UserService_CLientUpdateAddress_Handler,
+			MethodName: "ClientUpdateAddress",
+			Handler:    _UserService_ClientUpdateAddress_Handler,
 		},
 		{
 			MethodName: "ClientGetAddress",
 			Handler:    _UserService_ClientGetAddress_Handler,
+		},
+		{
+			MethodName: "FreelancerAddAddress",
+			Handler:    _UserService_FreelancerAddAddress_Handler,
+		},
+		{
+			MethodName: "FreelancerUpdateAddress",
+			Handler:    _UserService_FreelancerUpdateAddress_Handler,
+		},
+		{
+			MethodName: "FreelancerGetAddress",
+			Handler:    _UserService_FreelancerGetAddress_Handler,
 		},
 		{
 			MethodName: "BlockClient",

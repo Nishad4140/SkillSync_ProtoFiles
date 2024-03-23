@@ -13,15 +13,20 @@ service UserService {
     rpc FreelancerLogin(LoginRequest) returns (FreelancerSignUpResponse);
     rpc AdminLogin(LoginRequest) returns (ClientSignUpResponse);
     rpc ClientCreateProfile(GetUserById) returns (google.protobuf.Empty);
+    rpc FreelancerCreateProfile(GetUserById) returns (google.protobuf.Empty);
     rpc AddCategory(AddCategoryRequest) returns (google.protobuf.Empty);
     rpc UpdateCategory(UpdateCategoryRequest) returns (google.protobuf.Empty);
     rpc GetAllCategory(google.protobuf.Empty) returns (stream UpdateCategoryRequest);
+    rpc GetCategoryById(GetCategoryByIdRequest) returns (UpdateCategoryRequest);
     rpc AdminAddSkill(AddSkillRequest) returns (google.protobuf.Empty);
     rpc AdminUpdateSkill(SkillResponse) returns (google.protobuf.Empty);
     rpc GetAllSkills(google.protobuf.Empty) returns (stream SkillResponse);
     rpc ClientAddAddress(AddAddressRequest) returns (google.protobuf.Empty);
-    rpc CLientUpdateAddress(AddressResponse) returns (google.protobuf.Empty);
+    rpc ClientUpdateAddress(AddressResponse) returns (google.protobuf.Empty);
     rpc ClientGetAddress(GetUserById) returns (AddressResponse);
+    rpc FreelancerAddAddress(AddAddressRequest) returns (google.protobuf.Empty);
+    rpc FreelancerUpdateAddress(AddressResponse) returns (google.protobuf.Empty);
+    rpc FreelancerGetAddress(GetUserById) returns (AddressResponse);
     rpc BlockClient(GetUserById) returns (google.protobuf.Empty);
     rpc UnBlockClient(GetUserById) returns (google.protobuf.Empty);
     rpc BlockFreelancer(GetUserById) returns (google.protobuf.Empty);
@@ -69,6 +74,9 @@ message AddCategoryRequest {
 message UpdateCategoryRequest {
     int32 id = 1;
     string category = 2;
+}
+message GetCategoryByIdRequest {
+    int32 id = 1;
 }
 message AddAddressRequest {
     string country = 1;
