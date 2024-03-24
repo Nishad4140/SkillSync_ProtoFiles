@@ -34,6 +34,10 @@ type UserServiceClient interface {
 	ClientEditName(ctx context.Context, in *EditNameRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ClientEditPhone(ctx context.Context, in *EditPhoneRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	FreelancerCreateProfile(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	FreelancerUploadProfileImage(ctx context.Context, in *ImageRequest, opts ...grpc.CallOption) (*ImageResponse, error)
+	FreelancerGetProfileImage(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*ImageResponse, error)
+	FreelancerEditName(ctx context.Context, in *EditNameRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	FreelancerEditPhone(ctx context.Context, in *EditPhoneRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	AddCategory(ctx context.Context, in *AddCategoryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UpdateCategory(ctx context.Context, in *UpdateCategoryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetAllCategory(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (UserService_GetAllCategoryClient, error)
@@ -154,6 +158,42 @@ func (c *userServiceClient) ClientEditPhone(ctx context.Context, in *EditPhoneRe
 func (c *userServiceClient) FreelancerCreateProfile(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/user.UserService/FreelancerCreateProfile", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) FreelancerUploadProfileImage(ctx context.Context, in *ImageRequest, opts ...grpc.CallOption) (*ImageResponse, error) {
+	out := new(ImageResponse)
+	err := c.cc.Invoke(ctx, "/user.UserService/FreelancerUploadProfileImage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) FreelancerGetProfileImage(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*ImageResponse, error) {
+	out := new(ImageResponse)
+	err := c.cc.Invoke(ctx, "/user.UserService/FreelancerGetProfileImage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) FreelancerEditName(ctx context.Context, in *EditNameRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/FreelancerEditName", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) FreelancerEditPhone(ctx context.Context, in *EditPhoneRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/FreelancerEditPhone", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -374,6 +414,10 @@ type UserServiceServer interface {
 	ClientEditName(context.Context, *EditNameRequest) (*emptypb.Empty, error)
 	ClientEditPhone(context.Context, *EditPhoneRequest) (*emptypb.Empty, error)
 	FreelancerCreateProfile(context.Context, *GetUserById) (*emptypb.Empty, error)
+	FreelancerUploadProfileImage(context.Context, *ImageRequest) (*ImageResponse, error)
+	FreelancerGetProfileImage(context.Context, *GetUserById) (*ImageResponse, error)
+	FreelancerEditName(context.Context, *EditNameRequest) (*emptypb.Empty, error)
+	FreelancerEditPhone(context.Context, *EditPhoneRequest) (*emptypb.Empty, error)
 	AddCategory(context.Context, *AddCategoryRequest) (*emptypb.Empty, error)
 	UpdateCategory(context.Context, *UpdateCategoryRequest) (*emptypb.Empty, error)
 	GetAllCategory(*emptypb.Empty, UserService_GetAllCategoryServer) error
@@ -430,6 +474,18 @@ func (UnimplementedUserServiceServer) ClientEditPhone(context.Context, *EditPhon
 }
 func (UnimplementedUserServiceServer) FreelancerCreateProfile(context.Context, *GetUserById) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FreelancerCreateProfile not implemented")
+}
+func (UnimplementedUserServiceServer) FreelancerUploadProfileImage(context.Context, *ImageRequest) (*ImageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FreelancerUploadProfileImage not implemented")
+}
+func (UnimplementedUserServiceServer) FreelancerGetProfileImage(context.Context, *GetUserById) (*ImageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FreelancerGetProfileImage not implemented")
+}
+func (UnimplementedUserServiceServer) FreelancerEditName(context.Context, *EditNameRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FreelancerEditName not implemented")
+}
+func (UnimplementedUserServiceServer) FreelancerEditPhone(context.Context, *EditPhoneRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FreelancerEditPhone not implemented")
 }
 func (UnimplementedUserServiceServer) AddCategory(context.Context, *AddCategoryRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddCategory not implemented")
@@ -689,6 +745,78 @@ func _UserService_FreelancerCreateProfile_Handler(srv interface{}, ctx context.C
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).FreelancerCreateProfile(ctx, req.(*GetUserById))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_FreelancerUploadProfileImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ImageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).FreelancerUploadProfileImage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/FreelancerUploadProfileImage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).FreelancerUploadProfileImage(ctx, req.(*ImageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_FreelancerGetProfileImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserById)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).FreelancerGetProfileImage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/FreelancerGetProfileImage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).FreelancerGetProfileImage(ctx, req.(*GetUserById))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_FreelancerEditName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EditNameRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).FreelancerEditName(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/FreelancerEditName",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).FreelancerEditName(ctx, req.(*EditNameRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_FreelancerEditPhone_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EditPhoneRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).FreelancerEditPhone(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/FreelancerEditPhone",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).FreelancerEditPhone(ctx, req.(*EditPhoneRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1055,6 +1183,22 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "FreelancerCreateProfile",
 			Handler:    _UserService_FreelancerCreateProfile_Handler,
+		},
+		{
+			MethodName: "FreelancerUploadProfileImage",
+			Handler:    _UserService_FreelancerUploadProfileImage_Handler,
+		},
+		{
+			MethodName: "FreelancerGetProfileImage",
+			Handler:    _UserService_FreelancerGetProfileImage_Handler,
+		},
+		{
+			MethodName: "FreelancerEditName",
+			Handler:    _UserService_FreelancerEditName_Handler,
+		},
+		{
+			MethodName: "FreelancerEditPhone",
+			Handler:    _UserService_FreelancerEditPhone_Handler,
 		},
 		{
 			MethodName: "AddCategory",

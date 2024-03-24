@@ -18,6 +18,10 @@ service UserService {
     rpc ClientEditName(EditNameRequest) returns (google.protobuf.Empty);
     rpc ClientEditPhone(EditPhoneRequest) returns (google.protobuf.Empty);
     rpc FreelancerCreateProfile(GetUserById) returns (google.protobuf.Empty);
+    rpc FreelancerUploadProfileImage(ImageRequest) returns (ImageResponse);
+    rpc FreelancerGetProfileImage(GetUserById) returns (ImageResponse);
+    rpc FreelancerEditName(EditNameRequest) returns (google.protobuf.Empty);
+    rpc FreelancerEditPhone(EditPhoneRequest) returns (google.protobuf.Empty);
     rpc AddCategory(AddCategoryRequest) returns (google.protobuf.Empty);
     rpc UpdateCategory(UpdateCategoryRequest) returns (google.protobuf.Empty);
     rpc GetAllCategory(google.protobuf.Empty) returns (stream UpdateCategoryRequest);
