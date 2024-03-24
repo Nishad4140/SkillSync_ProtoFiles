@@ -13,6 +13,10 @@ service UserService {
     rpc FreelancerLogin(LoginRequest) returns (FreelancerSignUpResponse);
     rpc AdminLogin(LoginRequest) returns (ClientSignUpResponse);
     rpc ClientCreateProfile(GetUserById) returns (google.protobuf.Empty);
+    rpc ClientUploadProfileImage(ImageRequest) returns (ImageResponse);
+    rpc ClientGetProfileImage(GetUserById) returns (ImageResponse);
+    rpc ClientEditName(EditNameRequest) returns (google.protobuf.Empty);
+    rpc ClientEditPhone(EditPhoneRequest) returns (google.protobuf.Empty);
     rpc FreelancerCreateProfile(GetUserById) returns (google.protobuf.Empty);
     rpc AddCategory(AddCategoryRequest) returns (google.protobuf.Empty);
     rpc UpdateCategory(UpdateCategoryRequest) returns (google.protobuf.Empty);
@@ -92,6 +96,23 @@ message AddressResponse {
     string district = 4;
     string city = 5;
     string userId = 6;
+}
+message ImageRequest {
+    string objectName = 1;
+    string filePath = 2;
+    bytes imageData = 3;
+    string userId = 4;
+}
+message ImageResponse {
+    string url = 1;
+}
+message EditNameRequest {
+    string name = 1;
+    string userId = 2;
+}
+message EditPhoneRequest {
+    string phone = 1;
+    string userId = 2;
 }
 message AddSkillRequest {
     string skill = 1;
