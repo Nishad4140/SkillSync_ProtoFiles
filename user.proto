@@ -24,6 +24,9 @@ service UserService {
     rpc FreelancerGetProfileImage(GetUserById) returns (ImageResponse);
     rpc FreelancerEditName(EditNameRequest) returns (google.protobuf.Empty);
     rpc FreelancerEditPhone(EditPhoneRequest) returns (google.protobuf.Empty);
+    rpc FreelancerAddSkill(SkillRequest) returns (google.protobuf.Empty);
+    rpc FreelancerDeleteSkill(SkillRequest) returns (google.protobuf.Empty);
+    rpc FreelancerGetAllSkill(GetUserById) returns (stream SkillResponse);
     rpc AddCategory(AddCategoryRequest) returns (google.protobuf.Empty);
     rpc UpdateCategory(UpdateCategoryRequest) returns (google.protobuf.Empty);
     rpc GetAllCategory(google.protobuf.Empty) returns (stream UpdateCategoryRequest);
@@ -129,4 +132,8 @@ message SkillResponse {
     string skill = 2;
     int32 categoryId = 3;
     string category = 4;
+}
+message SkillRequest {
+    int32 skillId = 1;
+    string userId = 2;
 }
