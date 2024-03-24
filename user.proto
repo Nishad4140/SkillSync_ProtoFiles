@@ -17,6 +17,8 @@ service UserService {
     rpc ClientGetProfileImage(GetUserById) returns (ImageResponse);
     rpc ClientEditName(EditNameRequest) returns (google.protobuf.Empty);
     rpc ClientEditPhone(EditPhoneRequest) returns (google.protobuf.Empty);
+    rpc GetClientById(GetUserById) returns (ClientSignUpResponse);
+    rpc GetFreelancerById(GetUserById) returns (FreelancerSignUpResponse);
     rpc FreelancerCreateProfile(GetUserById) returns (google.protobuf.Empty);
     rpc FreelancerUploadProfileImage(ImageRequest) returns (ImageResponse);
     rpc FreelancerGetProfileImage(GetUserById) returns (ImageResponse);
