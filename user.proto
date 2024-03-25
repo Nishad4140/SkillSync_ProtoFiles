@@ -27,6 +27,14 @@ service UserService {
     rpc FreelancerAddSkill(SkillRequest) returns (google.protobuf.Empty);
     rpc FreelancerDeleteSkill(SkillRequest) returns (google.protobuf.Empty);
     rpc FreelancerGetAllSkill(GetUserById) returns (stream SkillResponse);
+    rpc FreelancerAddExperience(AddExperienceRequest) returns (google.protobuf.Empty);
+    rpc FreelancerAddEducation(EducationRequest) returns (google.protobuf.Empty);
+    rpc FreelancerEditEducation(EducationResponse) returns (google.protobuf.Empty);
+    rpc FreelancerGetEducation(GetUserById) returns (stream EducationResponse);
+    rpc FreelancerRemoveEducation(EducationById) returns (google.protobuf.Empty);
+    rpc FreelancerAddTitle(AddTitleRequest) returns (google.protobuf.Empty);
+    rpc FreelancerEditTitle(TitleResponse) returns (google.protobuf.Empty);
+    rpc FreelancerGetTitle(GetUserById) returns (TitleResponse);
     rpc AddCategory(AddCategoryRequest) returns (google.protobuf.Empty);
     rpc UpdateCategory(UpdateCategoryRequest) returns (google.protobuf.Empty);
     rpc GetAllCategory(google.protobuf.Empty) returns (stream UpdateCategoryRequest);
@@ -136,4 +144,35 @@ message SkillResponse {
 message SkillRequest {
     int32 skillId = 1;
     string userId = 2;
+}
+message AddExperienceRequest {
+    string userId = 1;
+    string experience = 2;
+}
+message EducationRequest {
+    string degree = 1;
+    string institution = 2;
+    string userId = 3;
+    string startDate = 4;
+    string endDate = 5;
+}
+message EducationResponse {
+    string id = 1;
+    string degree = 2;
+    string institution = 3;
+    string userId = 4;
+    string startDate = 5;
+    string endDate = 6;
+}
+message EducationById {
+    string educationId = 1;
+}
+message AddTitleRequest {
+    string title = 1;
+    string userId = 2;
+}
+message TitleResponse {
+    string id = 1;
+    string title = 2;
+    string userId = 3;
 }

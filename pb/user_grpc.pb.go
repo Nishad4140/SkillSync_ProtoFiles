@@ -43,6 +43,14 @@ type UserServiceClient interface {
 	FreelancerAddSkill(ctx context.Context, in *SkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	FreelancerDeleteSkill(ctx context.Context, in *SkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	FreelancerGetAllSkill(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (UserService_FreelancerGetAllSkillClient, error)
+	FreelancerAddExperience(ctx context.Context, in *AddExperienceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	FreelancerAddEducation(ctx context.Context, in *EducationRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	FreelancerEditEducation(ctx context.Context, in *EducationResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	FreelancerGetEducation(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (UserService_FreelancerGetEducationClient, error)
+	FreelancerRemoveEducation(ctx context.Context, in *EducationById, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	FreelancerAddTitle(ctx context.Context, in *AddTitleRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	FreelancerEditTitle(ctx context.Context, in *TitleResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	FreelancerGetTitle(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*TitleResponse, error)
 	AddCategory(ctx context.Context, in *AddCategoryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UpdateCategory(ctx context.Context, in *UpdateCategoryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetAllCategory(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (UserService_GetAllCategoryClient, error)
@@ -273,6 +281,101 @@ func (x *userServiceFreelancerGetAllSkillClient) Recv() (*SkillResponse, error) 
 	return m, nil
 }
 
+func (c *userServiceClient) FreelancerAddExperience(ctx context.Context, in *AddExperienceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/FreelancerAddExperience", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) FreelancerAddEducation(ctx context.Context, in *EducationRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/FreelancerAddEducation", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) FreelancerEditEducation(ctx context.Context, in *EducationResponse, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/FreelancerEditEducation", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) FreelancerGetEducation(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (UserService_FreelancerGetEducationClient, error) {
+	stream, err := c.cc.NewStream(ctx, &UserService_ServiceDesc.Streams[1], "/user.UserService/FreelancerGetEducation", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &userServiceFreelancerGetEducationClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type UserService_FreelancerGetEducationClient interface {
+	Recv() (*EducationResponse, error)
+	grpc.ClientStream
+}
+
+type userServiceFreelancerGetEducationClient struct {
+	grpc.ClientStream
+}
+
+func (x *userServiceFreelancerGetEducationClient) Recv() (*EducationResponse, error) {
+	m := new(EducationResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *userServiceClient) FreelancerRemoveEducation(ctx context.Context, in *EducationById, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/FreelancerRemoveEducation", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) FreelancerAddTitle(ctx context.Context, in *AddTitleRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/FreelancerAddTitle", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) FreelancerEditTitle(ctx context.Context, in *TitleResponse, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/FreelancerEditTitle", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) FreelancerGetTitle(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*TitleResponse, error) {
+	out := new(TitleResponse)
+	err := c.cc.Invoke(ctx, "/user.UserService/FreelancerGetTitle", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) AddCategory(ctx context.Context, in *AddCategoryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/user.UserService/AddCategory", in, out, opts...)
@@ -292,7 +395,7 @@ func (c *userServiceClient) UpdateCategory(ctx context.Context, in *UpdateCatego
 }
 
 func (c *userServiceClient) GetAllCategory(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (UserService_GetAllCategoryClient, error) {
-	stream, err := c.cc.NewStream(ctx, &UserService_ServiceDesc.Streams[1], "/user.UserService/GetAllCategory", opts...)
+	stream, err := c.cc.NewStream(ctx, &UserService_ServiceDesc.Streams[2], "/user.UserService/GetAllCategory", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -351,7 +454,7 @@ func (c *userServiceClient) AdminUpdateSkill(ctx context.Context, in *SkillRespo
 }
 
 func (c *userServiceClient) GetAllSkills(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (UserService_GetAllSkillsClient, error) {
-	stream, err := c.cc.NewStream(ctx, &UserService_ServiceDesc.Streams[2], "/user.UserService/GetAllSkills", opts...)
+	stream, err := c.cc.NewStream(ctx, &UserService_ServiceDesc.Streams[3], "/user.UserService/GetAllSkills", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -496,6 +599,14 @@ type UserServiceServer interface {
 	FreelancerAddSkill(context.Context, *SkillRequest) (*emptypb.Empty, error)
 	FreelancerDeleteSkill(context.Context, *SkillRequest) (*emptypb.Empty, error)
 	FreelancerGetAllSkill(*GetUserById, UserService_FreelancerGetAllSkillServer) error
+	FreelancerAddExperience(context.Context, *AddExperienceRequest) (*emptypb.Empty, error)
+	FreelancerAddEducation(context.Context, *EducationRequest) (*emptypb.Empty, error)
+	FreelancerEditEducation(context.Context, *EducationResponse) (*emptypb.Empty, error)
+	FreelancerGetEducation(*GetUserById, UserService_FreelancerGetEducationServer) error
+	FreelancerRemoveEducation(context.Context, *EducationById) (*emptypb.Empty, error)
+	FreelancerAddTitle(context.Context, *AddTitleRequest) (*emptypb.Empty, error)
+	FreelancerEditTitle(context.Context, *TitleResponse) (*emptypb.Empty, error)
+	FreelancerGetTitle(context.Context, *GetUserById) (*TitleResponse, error)
 	AddCategory(context.Context, *AddCategoryRequest) (*emptypb.Empty, error)
 	UpdateCategory(context.Context, *UpdateCategoryRequest) (*emptypb.Empty, error)
 	GetAllCategory(*emptypb.Empty, UserService_GetAllCategoryServer) error
@@ -579,6 +690,30 @@ func (UnimplementedUserServiceServer) FreelancerDeleteSkill(context.Context, *Sk
 }
 func (UnimplementedUserServiceServer) FreelancerGetAllSkill(*GetUserById, UserService_FreelancerGetAllSkillServer) error {
 	return status.Errorf(codes.Unimplemented, "method FreelancerGetAllSkill not implemented")
+}
+func (UnimplementedUserServiceServer) FreelancerAddExperience(context.Context, *AddExperienceRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FreelancerAddExperience not implemented")
+}
+func (UnimplementedUserServiceServer) FreelancerAddEducation(context.Context, *EducationRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FreelancerAddEducation not implemented")
+}
+func (UnimplementedUserServiceServer) FreelancerEditEducation(context.Context, *EducationResponse) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FreelancerEditEducation not implemented")
+}
+func (UnimplementedUserServiceServer) FreelancerGetEducation(*GetUserById, UserService_FreelancerGetEducationServer) error {
+	return status.Errorf(codes.Unimplemented, "method FreelancerGetEducation not implemented")
+}
+func (UnimplementedUserServiceServer) FreelancerRemoveEducation(context.Context, *EducationById) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FreelancerRemoveEducation not implemented")
+}
+func (UnimplementedUserServiceServer) FreelancerAddTitle(context.Context, *AddTitleRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FreelancerAddTitle not implemented")
+}
+func (UnimplementedUserServiceServer) FreelancerEditTitle(context.Context, *TitleResponse) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FreelancerEditTitle not implemented")
+}
+func (UnimplementedUserServiceServer) FreelancerGetTitle(context.Context, *GetUserById) (*TitleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FreelancerGetTitle not implemented")
 }
 func (UnimplementedUserServiceServer) AddCategory(context.Context, *AddCategoryRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddCategory not implemented")
@@ -1007,6 +1142,153 @@ func (x *userServiceFreelancerGetAllSkillServer) Send(m *SkillResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
+func _UserService_FreelancerAddExperience_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddExperienceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).FreelancerAddExperience(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/FreelancerAddExperience",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).FreelancerAddExperience(ctx, req.(*AddExperienceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_FreelancerAddEducation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EducationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).FreelancerAddEducation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/FreelancerAddEducation",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).FreelancerAddEducation(ctx, req.(*EducationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_FreelancerEditEducation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EducationResponse)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).FreelancerEditEducation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/FreelancerEditEducation",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).FreelancerEditEducation(ctx, req.(*EducationResponse))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_FreelancerGetEducation_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetUserById)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(UserServiceServer).FreelancerGetEducation(m, &userServiceFreelancerGetEducationServer{stream})
+}
+
+type UserService_FreelancerGetEducationServer interface {
+	Send(*EducationResponse) error
+	grpc.ServerStream
+}
+
+type userServiceFreelancerGetEducationServer struct {
+	grpc.ServerStream
+}
+
+func (x *userServiceFreelancerGetEducationServer) Send(m *EducationResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func _UserService_FreelancerRemoveEducation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EducationById)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).FreelancerRemoveEducation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/FreelancerRemoveEducation",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).FreelancerRemoveEducation(ctx, req.(*EducationById))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_FreelancerAddTitle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddTitleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).FreelancerAddTitle(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/FreelancerAddTitle",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).FreelancerAddTitle(ctx, req.(*AddTitleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_FreelancerEditTitle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TitleResponse)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).FreelancerEditTitle(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/FreelancerEditTitle",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).FreelancerEditTitle(ctx, req.(*TitleResponse))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_FreelancerGetTitle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserById)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).FreelancerGetTitle(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/FreelancerGetTitle",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).FreelancerGetTitle(ctx, req.(*GetUserById))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_AddCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddCategoryRequest)
 	if err := dec(in); err != nil {
@@ -1403,6 +1685,34 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_FreelancerDeleteSkill_Handler,
 		},
 		{
+			MethodName: "FreelancerAddExperience",
+			Handler:    _UserService_FreelancerAddExperience_Handler,
+		},
+		{
+			MethodName: "FreelancerAddEducation",
+			Handler:    _UserService_FreelancerAddEducation_Handler,
+		},
+		{
+			MethodName: "FreelancerEditEducation",
+			Handler:    _UserService_FreelancerEditEducation_Handler,
+		},
+		{
+			MethodName: "FreelancerRemoveEducation",
+			Handler:    _UserService_FreelancerRemoveEducation_Handler,
+		},
+		{
+			MethodName: "FreelancerAddTitle",
+			Handler:    _UserService_FreelancerAddTitle_Handler,
+		},
+		{
+			MethodName: "FreelancerEditTitle",
+			Handler:    _UserService_FreelancerEditTitle_Handler,
+		},
+		{
+			MethodName: "FreelancerGetTitle",
+			Handler:    _UserService_FreelancerGetTitle_Handler,
+		},
+		{
 			MethodName: "AddCategory",
 			Handler:    _UserService_AddCategory_Handler,
 		},
@@ -1467,6 +1777,11 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "FreelancerGetAllSkill",
 			Handler:       _UserService_FreelancerGetAllSkill_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "FreelancerGetEducation",
+			Handler:       _UserService_FreelancerGetEducation_Handler,
 			ServerStreams: true,
 		},
 		{
