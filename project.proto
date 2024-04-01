@@ -8,6 +8,12 @@ import "google/protobuf/empty.proto";
 
 service ProjectService {
     rpc CreateGig(CreateGigRequest) returns (google.protobuf.Empty);
+    rpc UpdateGig(GigResponse) returns (google.protobuf.Empty);
+    rpc GetGig(GetByGigId) returns (GigResponse);
+    rpc GetAllGigs(GetByUserId) returns (stream GigResponse);
+    rpc AddPackageType(AddPackageTypeRequest) returns (google.protobuf.Empty);
+    rpc EditPackageType(PackageTypeResponse) returns (google.protobuf.Empty);
+    rpc GetPackageType(PackageTypeId) returns (PackageTypeResponse);
 }
 
 message CreateGigRequest {
@@ -20,4 +26,32 @@ message CreateGigRequest {
     float price = 7;
     string delivaryDays = 8;
     repeated string images = 9;
+}
+message GigResponse {
+    string id = 1;
+    string title = 2;
+    string freelancerId = 3;
+    int32 categoryId = 4;
+    int32 skillId = 5;
+    string description = 6;
+    int32 packageTypeId = 7;
+    float price = 8;
+    string delivaryDays = 9;
+    repeated string images = 10;
+}
+message GetByGigId {
+    string id = 1;
+}
+message GetByUserId {
+    string id = 1;
+}
+message AddPackageTypeRequest {
+    string packageType = 1;
+}
+message PackageTypeResponse {
+    int32 id = 1;
+    string packageType = 2;
+}
+message PackageTypeId {
+    int32 id = 1;
 }
