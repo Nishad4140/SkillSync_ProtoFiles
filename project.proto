@@ -1,0 +1,23 @@
+syntax="proto3";
+
+package project;
+
+option go_package="./pb";
+
+import "google/protobuf/empty.proto";
+
+service ProjectService {
+    rpc CreateGig(CreateGigRequest) returns (google.protobuf.Empty);
+}
+
+message CreateGigRequest {
+    string title = 1;
+    string freelancerId = 2;
+    int32 categoryId = 3;
+    int32 skillId = 4;
+    string description = 5;
+    int32 packageTypeId = 6;
+    float price = 7;
+    string delivaryDays = 8;
+    repeated string images = 9;
+}
