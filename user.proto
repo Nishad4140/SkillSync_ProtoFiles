@@ -33,8 +33,7 @@ service UserService {
     rpc FreelancerGetEducation(GetUserById) returns (stream EducationResponse);
     rpc FreelancerRemoveEducation(EducationById) returns (google.protobuf.Empty);
     rpc FreelancerAddTitle(AddTitleRequest) returns (google.protobuf.Empty);
-    rpc FreelancerEditTitle(TitleResponse) returns (google.protobuf.Empty);
-    rpc FreelancerGetTitle(GetUserById) returns (TitleResponse);
+    rpc FreelancerGetProfile(GetUserById) returns (ProfileResponse);
     rpc AddCategory(AddCategoryRequest) returns (google.protobuf.Empty);
     rpc UpdateCategory(UpdateCategoryRequest) returns (google.protobuf.Empty);
     rpc GetAllCategory(google.protobuf.Empty) returns (stream UpdateCategoryRequest);
@@ -175,4 +174,10 @@ message TitleResponse {
     string id = 1;
     string title = 2;
     string userId = 3;
+}
+message ProfileResponse {
+    string id = 1;
+    string freelancerId = 2;
+    string title = 3;
+    string experienceInCurrentField = 4;
 }

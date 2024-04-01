@@ -49,8 +49,7 @@ type UserServiceClient interface {
 	FreelancerGetEducation(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (UserService_FreelancerGetEducationClient, error)
 	FreelancerRemoveEducation(ctx context.Context, in *EducationById, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	FreelancerAddTitle(ctx context.Context, in *AddTitleRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	FreelancerEditTitle(ctx context.Context, in *TitleResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	FreelancerGetTitle(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*TitleResponse, error)
+	FreelancerGetProfile(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*ProfileResponse, error)
 	AddCategory(ctx context.Context, in *AddCategoryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UpdateCategory(ctx context.Context, in *UpdateCategoryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetAllCategory(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (UserService_GetAllCategoryClient, error)
@@ -358,18 +357,9 @@ func (c *userServiceClient) FreelancerAddTitle(ctx context.Context, in *AddTitle
 	return out, nil
 }
 
-func (c *userServiceClient) FreelancerEditTitle(ctx context.Context, in *TitleResponse, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/user.UserService/FreelancerEditTitle", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userServiceClient) FreelancerGetTitle(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*TitleResponse, error) {
-	out := new(TitleResponse)
-	err := c.cc.Invoke(ctx, "/user.UserService/FreelancerGetTitle", in, out, opts...)
+func (c *userServiceClient) FreelancerGetProfile(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*ProfileResponse, error) {
+	out := new(ProfileResponse)
+	err := c.cc.Invoke(ctx, "/user.UserService/FreelancerGetProfile", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -605,8 +595,7 @@ type UserServiceServer interface {
 	FreelancerGetEducation(*GetUserById, UserService_FreelancerGetEducationServer) error
 	FreelancerRemoveEducation(context.Context, *EducationById) (*emptypb.Empty, error)
 	FreelancerAddTitle(context.Context, *AddTitleRequest) (*emptypb.Empty, error)
-	FreelancerEditTitle(context.Context, *TitleResponse) (*emptypb.Empty, error)
-	FreelancerGetTitle(context.Context, *GetUserById) (*TitleResponse, error)
+	FreelancerGetProfile(context.Context, *GetUserById) (*ProfileResponse, error)
 	AddCategory(context.Context, *AddCategoryRequest) (*emptypb.Empty, error)
 	UpdateCategory(context.Context, *UpdateCategoryRequest) (*emptypb.Empty, error)
 	GetAllCategory(*emptypb.Empty, UserService_GetAllCategoryServer) error
@@ -709,11 +698,8 @@ func (UnimplementedUserServiceServer) FreelancerRemoveEducation(context.Context,
 func (UnimplementedUserServiceServer) FreelancerAddTitle(context.Context, *AddTitleRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FreelancerAddTitle not implemented")
 }
-func (UnimplementedUserServiceServer) FreelancerEditTitle(context.Context, *TitleResponse) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method FreelancerEditTitle not implemented")
-}
-func (UnimplementedUserServiceServer) FreelancerGetTitle(context.Context, *GetUserById) (*TitleResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method FreelancerGetTitle not implemented")
+func (UnimplementedUserServiceServer) FreelancerGetProfile(context.Context, *GetUserById) (*ProfileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FreelancerGetProfile not implemented")
 }
 func (UnimplementedUserServiceServer) AddCategory(context.Context, *AddCategoryRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddCategory not implemented")
@@ -1253,38 +1239,20 @@ func _UserService_FreelancerAddTitle_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_FreelancerEditTitle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(TitleResponse)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).FreelancerEditTitle(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/user.UserService/FreelancerEditTitle",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).FreelancerEditTitle(ctx, req.(*TitleResponse))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserService_FreelancerGetTitle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserService_FreelancerGetProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetUserById)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServiceServer).FreelancerGetTitle(ctx, in)
+		return srv.(UserServiceServer).FreelancerGetProfile(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/user.UserService/FreelancerGetTitle",
+		FullMethod: "/user.UserService/FreelancerGetProfile",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).FreelancerGetTitle(ctx, req.(*GetUserById))
+		return srv.(UserServiceServer).FreelancerGetProfile(ctx, req.(*GetUserById))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1705,12 +1673,8 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_FreelancerAddTitle_Handler,
 		},
 		{
-			MethodName: "FreelancerEditTitle",
-			Handler:    _UserService_FreelancerEditTitle_Handler,
-		},
-		{
-			MethodName: "FreelancerGetTitle",
-			Handler:    _UserService_FreelancerGetTitle_Handler,
+			MethodName: "FreelancerGetProfile",
+			Handler:    _UserService_FreelancerGetProfile_Handler,
 		},
 		{
 			MethodName: "AddCategory",
