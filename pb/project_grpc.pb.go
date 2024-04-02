@@ -29,7 +29,7 @@ type ProjectServiceClient interface {
 	GetAllGigs(ctx context.Context, in *GetByUserId, opts ...grpc.CallOption) (ProjectService_GetAllGigsClient, error)
 	AddPackageType(ctx context.Context, in *AddPackageTypeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	EditPackageType(ctx context.Context, in *PackageTypeResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	GetPackageType(ctx context.Context, in *PackageTypeId, opts ...grpc.CallOption) (*PackageTypeResponse, error)
+	GetPackageType(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (ProjectService_GetPackageTypeClient, error)
 }
 
 type projectServiceClient struct {
@@ -117,13 +117,36 @@ func (c *projectServiceClient) EditPackageType(ctx context.Context, in *PackageT
 	return out, nil
 }
 
-func (c *projectServiceClient) GetPackageType(ctx context.Context, in *PackageTypeId, opts ...grpc.CallOption) (*PackageTypeResponse, error) {
-	out := new(PackageTypeResponse)
-	err := c.cc.Invoke(ctx, "/project.ProjectService/GetPackageType", in, out, opts...)
+func (c *projectServiceClient) GetPackageType(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (ProjectService_GetPackageTypeClient, error) {
+	stream, err := c.cc.NewStream(ctx, &ProjectService_ServiceDesc.Streams[1], "/project.ProjectService/GetPackageType", opts...)
 	if err != nil {
 		return nil, err
 	}
-	return out, nil
+	x := &projectServiceGetPackageTypeClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type ProjectService_GetPackageTypeClient interface {
+	Recv() (*PackageTypeResponse, error)
+	grpc.ClientStream
+}
+
+type projectServiceGetPackageTypeClient struct {
+	grpc.ClientStream
+}
+
+func (x *projectServiceGetPackageTypeClient) Recv() (*PackageTypeResponse, error) {
+	m := new(PackageTypeResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
 
 // ProjectServiceServer is the server API for ProjectService service.
@@ -136,7 +159,7 @@ type ProjectServiceServer interface {
 	GetAllGigs(*GetByUserId, ProjectService_GetAllGigsServer) error
 	AddPackageType(context.Context, *AddPackageTypeRequest) (*emptypb.Empty, error)
 	EditPackageType(context.Context, *PackageTypeResponse) (*emptypb.Empty, error)
-	GetPackageType(context.Context, *PackageTypeId) (*PackageTypeResponse, error)
+	GetPackageType(*emptypb.Empty, ProjectService_GetPackageTypeServer) error
 	mustEmbedUnimplementedProjectServiceServer()
 }
 
@@ -162,8 +185,8 @@ func (UnimplementedProjectServiceServer) AddPackageType(context.Context, *AddPac
 func (UnimplementedProjectServiceServer) EditPackageType(context.Context, *PackageTypeResponse) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method EditPackageType not implemented")
 }
-func (UnimplementedProjectServiceServer) GetPackageType(context.Context, *PackageTypeId) (*PackageTypeResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetPackageType not implemented")
+func (UnimplementedProjectServiceServer) GetPackageType(*emptypb.Empty, ProjectService_GetPackageTypeServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetPackageType not implemented")
 }
 func (UnimplementedProjectServiceServer) mustEmbedUnimplementedProjectServiceServer() {}
 
@@ -289,22 +312,25 @@ func _ProjectService_EditPackageType_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ProjectService_GetPackageType_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PackageTypeId)
-	if err := dec(in); err != nil {
-		return nil, err
+func _ProjectService_GetPackageType_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(emptypb.Empty)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
 	}
-	if interceptor == nil {
-		return srv.(ProjectServiceServer).GetPackageType(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/project.ProjectService/GetPackageType",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProjectServiceServer).GetPackageType(ctx, req.(*PackageTypeId))
-	}
-	return interceptor(ctx, in, info, handler)
+	return srv.(ProjectServiceServer).GetPackageType(m, &projectServiceGetPackageTypeServer{stream})
+}
+
+type ProjectService_GetPackageTypeServer interface {
+	Send(*PackageTypeResponse) error
+	grpc.ServerStream
+}
+
+type projectServiceGetPackageTypeServer struct {
+	grpc.ServerStream
+}
+
+func (x *projectServiceGetPackageTypeServer) Send(m *PackageTypeResponse) error {
+	return x.ServerStream.SendMsg(m)
 }
 
 // ProjectService_ServiceDesc is the grpc.ServiceDesc for ProjectService service.
@@ -334,15 +360,16 @@ var ProjectService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "EditPackageType",
 			Handler:    _ProjectService_EditPackageType_Handler,
 		},
-		{
-			MethodName: "GetPackageType",
-			Handler:    _ProjectService_GetPackageType_Handler,
-		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "GetAllGigs",
 			Handler:       _ProjectService_GetAllGigs_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "GetPackageType",
+			Handler:       _ProjectService_GetPackageType_Handler,
 			ServerStreams: true,
 		},
 	},

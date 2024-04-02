@@ -13,7 +13,7 @@ service ProjectService {
     rpc GetAllGigs(GetByUserId) returns (stream GigResponse);
     rpc AddPackageType(AddPackageTypeRequest) returns (google.protobuf.Empty);
     rpc EditPackageType(PackageTypeResponse) returns (google.protobuf.Empty);
-    rpc GetPackageType(PackageTypeId) returns (PackageTypeResponse);
+    rpc GetPackageType(google.protobuf.Empty) returns (stream PackageTypeResponse);
 }
 
 message CreateGigRequest {
