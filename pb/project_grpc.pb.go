@@ -25,11 +25,15 @@ const _ = grpc.SupportPackageIsVersion7
 type ProjectServiceClient interface {
 	CreateGig(ctx context.Context, in *CreateGigRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UpdateGig(ctx context.Context, in *GigResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	GetGig(ctx context.Context, in *GetByGigId, opts ...grpc.CallOption) (*GigResponse, error)
-	GetAllGigs(ctx context.Context, in *GetByUserId, opts ...grpc.CallOption) (ProjectService_GetAllGigsClient, error)
+	GetGig(ctx context.Context, in *GetById, opts ...grpc.CallOption) (*GigResponse, error)
+	GetAllFreelancerGigs(ctx context.Context, in *GetByUserId, opts ...grpc.CallOption) (ProjectService_GetAllFreelancerGigsClient, error)
 	AddPackageType(ctx context.Context, in *AddPackageTypeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	EditPackageType(ctx context.Context, in *PackageTypeResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetPackageType(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (ProjectService_GetPackageTypeClient, error)
+	ClientAddRequest(ctx context.Context, in *AddClientGigRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ClientUpdateRequest(ctx context.Context, in *ClientRequestResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetClientRequest(ctx context.Context, in *GetById, opts ...grpc.CallOption) (*ClientRequestResponse, error)
+	GetAllClientRequest(ctx context.Context, in *GetByUserId, opts ...grpc.CallOption) (ProjectService_GetAllClientRequestClient, error)
 }
 
 type projectServiceClient struct {
@@ -58,7 +62,7 @@ func (c *projectServiceClient) UpdateGig(ctx context.Context, in *GigResponse, o
 	return out, nil
 }
 
-func (c *projectServiceClient) GetGig(ctx context.Context, in *GetByGigId, opts ...grpc.CallOption) (*GigResponse, error) {
+func (c *projectServiceClient) GetGig(ctx context.Context, in *GetById, opts ...grpc.CallOption) (*GigResponse, error) {
 	out := new(GigResponse)
 	err := c.cc.Invoke(ctx, "/project.ProjectService/GetGig", in, out, opts...)
 	if err != nil {
@@ -67,12 +71,12 @@ func (c *projectServiceClient) GetGig(ctx context.Context, in *GetByGigId, opts 
 	return out, nil
 }
 
-func (c *projectServiceClient) GetAllGigs(ctx context.Context, in *GetByUserId, opts ...grpc.CallOption) (ProjectService_GetAllGigsClient, error) {
-	stream, err := c.cc.NewStream(ctx, &ProjectService_ServiceDesc.Streams[0], "/project.ProjectService/GetAllGigs", opts...)
+func (c *projectServiceClient) GetAllFreelancerGigs(ctx context.Context, in *GetByUserId, opts ...grpc.CallOption) (ProjectService_GetAllFreelancerGigsClient, error) {
+	stream, err := c.cc.NewStream(ctx, &ProjectService_ServiceDesc.Streams[0], "/project.ProjectService/GetAllFreelancerGigs", opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &projectServiceGetAllGigsClient{stream}
+	x := &projectServiceGetAllFreelancerGigsClient{stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -82,16 +86,16 @@ func (c *projectServiceClient) GetAllGigs(ctx context.Context, in *GetByUserId, 
 	return x, nil
 }
 
-type ProjectService_GetAllGigsClient interface {
+type ProjectService_GetAllFreelancerGigsClient interface {
 	Recv() (*GigResponse, error)
 	grpc.ClientStream
 }
 
-type projectServiceGetAllGigsClient struct {
+type projectServiceGetAllFreelancerGigsClient struct {
 	grpc.ClientStream
 }
 
-func (x *projectServiceGetAllGigsClient) Recv() (*GigResponse, error) {
+func (x *projectServiceGetAllFreelancerGigsClient) Recv() (*GigResponse, error) {
 	m := new(GigResponse)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -149,17 +153,80 @@ func (x *projectServiceGetPackageTypeClient) Recv() (*PackageTypeResponse, error
 	return m, nil
 }
 
+func (c *projectServiceClient) ClientAddRequest(ctx context.Context, in *AddClientGigRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/project.ProjectService/ClientAddRequest", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *projectServiceClient) ClientUpdateRequest(ctx context.Context, in *ClientRequestResponse, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/project.ProjectService/ClientUpdateRequest", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *projectServiceClient) GetClientRequest(ctx context.Context, in *GetById, opts ...grpc.CallOption) (*ClientRequestResponse, error) {
+	out := new(ClientRequestResponse)
+	err := c.cc.Invoke(ctx, "/project.ProjectService/GetClientRequest", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *projectServiceClient) GetAllClientRequest(ctx context.Context, in *GetByUserId, opts ...grpc.CallOption) (ProjectService_GetAllClientRequestClient, error) {
+	stream, err := c.cc.NewStream(ctx, &ProjectService_ServiceDesc.Streams[2], "/project.ProjectService/GetAllClientRequest", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &projectServiceGetAllClientRequestClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type ProjectService_GetAllClientRequestClient interface {
+	Recv() (*ClientRequestResponse, error)
+	grpc.ClientStream
+}
+
+type projectServiceGetAllClientRequestClient struct {
+	grpc.ClientStream
+}
+
+func (x *projectServiceGetAllClientRequestClient) Recv() (*ClientRequestResponse, error) {
+	m := new(ClientRequestResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // ProjectServiceServer is the server API for ProjectService service.
 // All implementations must embed UnimplementedProjectServiceServer
 // for forward compatibility
 type ProjectServiceServer interface {
 	CreateGig(context.Context, *CreateGigRequest) (*emptypb.Empty, error)
 	UpdateGig(context.Context, *GigResponse) (*emptypb.Empty, error)
-	GetGig(context.Context, *GetByGigId) (*GigResponse, error)
-	GetAllGigs(*GetByUserId, ProjectService_GetAllGigsServer) error
+	GetGig(context.Context, *GetById) (*GigResponse, error)
+	GetAllFreelancerGigs(*GetByUserId, ProjectService_GetAllFreelancerGigsServer) error
 	AddPackageType(context.Context, *AddPackageTypeRequest) (*emptypb.Empty, error)
 	EditPackageType(context.Context, *PackageTypeResponse) (*emptypb.Empty, error)
 	GetPackageType(*emptypb.Empty, ProjectService_GetPackageTypeServer) error
+	ClientAddRequest(context.Context, *AddClientGigRequest) (*emptypb.Empty, error)
+	ClientUpdateRequest(context.Context, *ClientRequestResponse) (*emptypb.Empty, error)
+	GetClientRequest(context.Context, *GetById) (*ClientRequestResponse, error)
+	GetAllClientRequest(*GetByUserId, ProjectService_GetAllClientRequestServer) error
 	mustEmbedUnimplementedProjectServiceServer()
 }
 
@@ -173,11 +240,11 @@ func (UnimplementedProjectServiceServer) CreateGig(context.Context, *CreateGigRe
 func (UnimplementedProjectServiceServer) UpdateGig(context.Context, *GigResponse) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateGig not implemented")
 }
-func (UnimplementedProjectServiceServer) GetGig(context.Context, *GetByGigId) (*GigResponse, error) {
+func (UnimplementedProjectServiceServer) GetGig(context.Context, *GetById) (*GigResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetGig not implemented")
 }
-func (UnimplementedProjectServiceServer) GetAllGigs(*GetByUserId, ProjectService_GetAllGigsServer) error {
-	return status.Errorf(codes.Unimplemented, "method GetAllGigs not implemented")
+func (UnimplementedProjectServiceServer) GetAllFreelancerGigs(*GetByUserId, ProjectService_GetAllFreelancerGigsServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetAllFreelancerGigs not implemented")
 }
 func (UnimplementedProjectServiceServer) AddPackageType(context.Context, *AddPackageTypeRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddPackageType not implemented")
@@ -187,6 +254,18 @@ func (UnimplementedProjectServiceServer) EditPackageType(context.Context, *Packa
 }
 func (UnimplementedProjectServiceServer) GetPackageType(*emptypb.Empty, ProjectService_GetPackageTypeServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetPackageType not implemented")
+}
+func (UnimplementedProjectServiceServer) ClientAddRequest(context.Context, *AddClientGigRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ClientAddRequest not implemented")
+}
+func (UnimplementedProjectServiceServer) ClientUpdateRequest(context.Context, *ClientRequestResponse) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ClientUpdateRequest not implemented")
+}
+func (UnimplementedProjectServiceServer) GetClientRequest(context.Context, *GetById) (*ClientRequestResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetClientRequest not implemented")
+}
+func (UnimplementedProjectServiceServer) GetAllClientRequest(*GetByUserId, ProjectService_GetAllClientRequestServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetAllClientRequest not implemented")
 }
 func (UnimplementedProjectServiceServer) mustEmbedUnimplementedProjectServiceServer() {}
 
@@ -238,7 +317,7 @@ func _ProjectService_UpdateGig_Handler(srv interface{}, ctx context.Context, dec
 }
 
 func _ProjectService_GetGig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetByGigId)
+	in := new(GetById)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -250,29 +329,29 @@ func _ProjectService_GetGig_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: "/project.ProjectService/GetGig",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProjectServiceServer).GetGig(ctx, req.(*GetByGigId))
+		return srv.(ProjectServiceServer).GetGig(ctx, req.(*GetById))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ProjectService_GetAllGigs_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _ProjectService_GetAllFreelancerGigs_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(GetByUserId)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(ProjectServiceServer).GetAllGigs(m, &projectServiceGetAllGigsServer{stream})
+	return srv.(ProjectServiceServer).GetAllFreelancerGigs(m, &projectServiceGetAllFreelancerGigsServer{stream})
 }
 
-type ProjectService_GetAllGigsServer interface {
+type ProjectService_GetAllFreelancerGigsServer interface {
 	Send(*GigResponse) error
 	grpc.ServerStream
 }
 
-type projectServiceGetAllGigsServer struct {
+type projectServiceGetAllFreelancerGigsServer struct {
 	grpc.ServerStream
 }
 
-func (x *projectServiceGetAllGigsServer) Send(m *GigResponse) error {
+func (x *projectServiceGetAllFreelancerGigsServer) Send(m *GigResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
@@ -333,6 +412,81 @@ func (x *projectServiceGetPackageTypeServer) Send(m *PackageTypeResponse) error 
 	return x.ServerStream.SendMsg(m)
 }
 
+func _ProjectService_ClientAddRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddClientGigRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProjectServiceServer).ClientAddRequest(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/project.ProjectService/ClientAddRequest",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProjectServiceServer).ClientAddRequest(ctx, req.(*AddClientGigRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProjectService_ClientUpdateRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ClientRequestResponse)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProjectServiceServer).ClientUpdateRequest(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/project.ProjectService/ClientUpdateRequest",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProjectServiceServer).ClientUpdateRequest(ctx, req.(*ClientRequestResponse))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProjectService_GetClientRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetById)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProjectServiceServer).GetClientRequest(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/project.ProjectService/GetClientRequest",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProjectServiceServer).GetClientRequest(ctx, req.(*GetById))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProjectService_GetAllClientRequest_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetByUserId)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(ProjectServiceServer).GetAllClientRequest(m, &projectServiceGetAllClientRequestServer{stream})
+}
+
+type ProjectService_GetAllClientRequestServer interface {
+	Send(*ClientRequestResponse) error
+	grpc.ServerStream
+}
+
+type projectServiceGetAllClientRequestServer struct {
+	grpc.ServerStream
+}
+
+func (x *projectServiceGetAllClientRequestServer) Send(m *ClientRequestResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // ProjectService_ServiceDesc is the grpc.ServiceDesc for ProjectService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -360,16 +514,33 @@ var ProjectService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "EditPackageType",
 			Handler:    _ProjectService_EditPackageType_Handler,
 		},
+		{
+			MethodName: "ClientAddRequest",
+			Handler:    _ProjectService_ClientAddRequest_Handler,
+		},
+		{
+			MethodName: "ClientUpdateRequest",
+			Handler:    _ProjectService_ClientUpdateRequest_Handler,
+		},
+		{
+			MethodName: "GetClientRequest",
+			Handler:    _ProjectService_GetClientRequest_Handler,
+		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "GetAllGigs",
-			Handler:       _ProjectService_GetAllGigs_Handler,
+			StreamName:    "GetAllFreelancerGigs",
+			Handler:       _ProjectService_GetAllFreelancerGigs_Handler,
 			ServerStreams: true,
 		},
 		{
 			StreamName:    "GetPackageType",
 			Handler:       _ProjectService_GetPackageType_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "GetAllClientRequest",
+			Handler:       _ProjectService_GetAllClientRequest_Handler,
 			ServerStreams: true,
 		},
 	},
