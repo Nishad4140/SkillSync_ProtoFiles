@@ -25,6 +25,8 @@ const _ = grpc.SupportPackageIsVersion7
 type NotificationServiceClient interface {
 	SendOTP(ctx context.Context, in *SendOTPRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	VerifyOTP(ctx context.Context, in *VerifyOTPRequest, opts ...grpc.CallOption) (*VerifyOTPResponse, error)
+	AddNotification(ctx context.Context, in *AddNotificationRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetAllNotification(ctx context.Context, in *GetNotificationsByUserId, opts ...grpc.CallOption) (NotificationService_GetAllNotificationClient, error)
 }
 
 type notificationServiceClient struct {
@@ -53,12 +55,55 @@ func (c *notificationServiceClient) VerifyOTP(ctx context.Context, in *VerifyOTP
 	return out, nil
 }
 
+func (c *notificationServiceClient) AddNotification(ctx context.Context, in *AddNotificationRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/notification.NotificationService/AddNotification", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *notificationServiceClient) GetAllNotification(ctx context.Context, in *GetNotificationsByUserId, opts ...grpc.CallOption) (NotificationService_GetAllNotificationClient, error) {
+	stream, err := c.cc.NewStream(ctx, &NotificationService_ServiceDesc.Streams[0], "/notification.NotificationService/GetAllNotification", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &notificationServiceGetAllNotificationClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type NotificationService_GetAllNotificationClient interface {
+	Recv() (*NotificationResponse, error)
+	grpc.ClientStream
+}
+
+type notificationServiceGetAllNotificationClient struct {
+	grpc.ClientStream
+}
+
+func (x *notificationServiceGetAllNotificationClient) Recv() (*NotificationResponse, error) {
+	m := new(NotificationResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // NotificationServiceServer is the server API for NotificationService service.
 // All implementations must embed UnimplementedNotificationServiceServer
 // for forward compatibility
 type NotificationServiceServer interface {
 	SendOTP(context.Context, *SendOTPRequest) (*emptypb.Empty, error)
 	VerifyOTP(context.Context, *VerifyOTPRequest) (*VerifyOTPResponse, error)
+	AddNotification(context.Context, *AddNotificationRequest) (*emptypb.Empty, error)
+	GetAllNotification(*GetNotificationsByUserId, NotificationService_GetAllNotificationServer) error
 	mustEmbedUnimplementedNotificationServiceServer()
 }
 
@@ -71,6 +116,12 @@ func (UnimplementedNotificationServiceServer) SendOTP(context.Context, *SendOTPR
 }
 func (UnimplementedNotificationServiceServer) VerifyOTP(context.Context, *VerifyOTPRequest) (*VerifyOTPResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyOTP not implemented")
+}
+func (UnimplementedNotificationServiceServer) AddNotification(context.Context, *AddNotificationRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddNotification not implemented")
+}
+func (UnimplementedNotificationServiceServer) GetAllNotification(*GetNotificationsByUserId, NotificationService_GetAllNotificationServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetAllNotification not implemented")
 }
 func (UnimplementedNotificationServiceServer) mustEmbedUnimplementedNotificationServiceServer() {}
 
@@ -121,6 +172,45 @@ func _NotificationService_VerifyOTP_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _NotificationService_AddNotification_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddNotificationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NotificationServiceServer).AddNotification(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/notification.NotificationService/AddNotification",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NotificationServiceServer).AddNotification(ctx, req.(*AddNotificationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _NotificationService_GetAllNotification_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetNotificationsByUserId)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(NotificationServiceServer).GetAllNotification(m, &notificationServiceGetAllNotificationServer{stream})
+}
+
+type NotificationService_GetAllNotificationServer interface {
+	Send(*NotificationResponse) error
+	grpc.ServerStream
+}
+
+type notificationServiceGetAllNotificationServer struct {
+	grpc.ServerStream
+}
+
+func (x *notificationServiceGetAllNotificationServer) Send(m *NotificationResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // NotificationService_ServiceDesc is the grpc.ServiceDesc for NotificationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -136,7 +226,17 @@ var NotificationService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "VerifyOTP",
 			Handler:    _NotificationService_VerifyOTP_Handler,
 		},
+		{
+			MethodName: "AddNotification",
+			Handler:    _NotificationService_AddNotification_Handler,
+		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "GetAllNotification",
+			Handler:       _NotificationService_GetAllNotification_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "notification.proto",
 }

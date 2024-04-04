@@ -9,6 +9,8 @@ import "google/protobuf/empty.proto";
 service NotificationService {
     rpc SendOTP(SendOTPRequest) returns (google.protobuf.Empty);
     rpc VerifyOTP(VerifyOTPRequest) returns (VerifyOTPResponse);
+    rpc AddNotification(AddNotificationRequest) returns (google.protobuf.Empty);
+    rpc GetAllNotification(GetNotificationsByUserId) returns (stream NotificationResponse);
 }
 
 message SendOTPRequest {
@@ -22,4 +24,17 @@ message VerifyOTPRequest {
 
 message VerifyOTPResponse {
     bool isVerified=1;
+}
+
+message AddNotificationRequest {
+    string userId = 1;
+    string notification = 2;
+}
+
+message GetNotificationsByUserId {
+    string userId = 1;
+}
+
+message NotificationResponse {
+    string notification = 1;
 }
