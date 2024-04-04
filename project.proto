@@ -66,9 +66,9 @@ message PackageTypeId {
 message AddClientGigRequest {
     string clientId = 1;
     string title = 2;
-    string categoryId = 3;
-    string skillId = 4;
-    string price = 5;
+    int32 categoryId = 3;
+    int32 skillId = 4;
+    float price = 5;
     string description = 6;
     string deliveryDate = 7;
 }
