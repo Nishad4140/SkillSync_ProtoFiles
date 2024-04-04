@@ -11,6 +11,8 @@ service ProjectService {
     rpc UpdateGig(GigResponse) returns (google.protobuf.Empty);
     rpc GetGig(GetById) returns (GigResponse);
     rpc GetAllFreelancerGigs(GetByUserId) returns (stream GigResponse);
+    rpc ShowIntrest(IntrestRequest) returns (google.protobuf.Empty);
+    rpc GetAllIntrest(GetAllIntrestRequest) returns (IntrestResponse);
 
     rpc AddPackageType(AddPackageTypeRequest) returns (google.protobuf.Empty);
     rpc EditPackageType(PackageTypeResponse) returns (google.protobuf.Empty);
@@ -82,4 +84,20 @@ message ClientRequestResponse {
     string description = 7;
     string deliveryDate = 8;
     repeated string images = 9;
+}
+message IntrestRequest {
+    string userId = 1;
+    string requestId = 2;
+    string gigId = 3;
+}
+message GetAllIntrestRequest {
+    string requestId = 1;
+    string userId = 2;
+}
+message IntrestResponse {
+    string id = 1;
+    string userId = 2;
+    string name = 3;
+    string requestId = 4;
+    string gigId = 5;
 }

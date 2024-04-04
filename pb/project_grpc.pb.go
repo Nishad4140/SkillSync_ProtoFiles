@@ -27,6 +27,8 @@ type ProjectServiceClient interface {
 	UpdateGig(ctx context.Context, in *GigResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetGig(ctx context.Context, in *GetById, opts ...grpc.CallOption) (*GigResponse, error)
 	GetAllFreelancerGigs(ctx context.Context, in *GetByUserId, opts ...grpc.CallOption) (ProjectService_GetAllFreelancerGigsClient, error)
+	ShowIntrest(ctx context.Context, in *IntrestRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetAllIntrest(ctx context.Context, in *GetAllIntrestRequest, opts ...grpc.CallOption) (*IntrestResponse, error)
 	AddPackageType(ctx context.Context, in *AddPackageTypeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	EditPackageType(ctx context.Context, in *PackageTypeResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetPackageType(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (ProjectService_GetPackageTypeClient, error)
@@ -103,6 +105,24 @@ func (x *projectServiceGetAllFreelancerGigsClient) Recv() (*GigResponse, error) 
 		return nil, err
 	}
 	return m, nil
+}
+
+func (c *projectServiceClient) ShowIntrest(ctx context.Context, in *IntrestRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/project.ProjectService/ShowIntrest", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *projectServiceClient) GetAllIntrest(ctx context.Context, in *GetAllIntrestRequest, opts ...grpc.CallOption) (*IntrestResponse, error) {
+	out := new(IntrestResponse)
+	err := c.cc.Invoke(ctx, "/project.ProjectService/GetAllIntrest", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *projectServiceClient) AddPackageType(ctx context.Context, in *AddPackageTypeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
@@ -286,6 +306,8 @@ type ProjectServiceServer interface {
 	UpdateGig(context.Context, *GigResponse) (*emptypb.Empty, error)
 	GetGig(context.Context, *GetById) (*GigResponse, error)
 	GetAllFreelancerGigs(*GetByUserId, ProjectService_GetAllFreelancerGigsServer) error
+	ShowIntrest(context.Context, *IntrestRequest) (*emptypb.Empty, error)
+	GetAllIntrest(context.Context, *GetAllIntrestRequest) (*IntrestResponse, error)
 	AddPackageType(context.Context, *AddPackageTypeRequest) (*emptypb.Empty, error)
 	EditPackageType(context.Context, *PackageTypeResponse) (*emptypb.Empty, error)
 	GetPackageType(*emptypb.Empty, ProjectService_GetPackageTypeServer) error
@@ -313,6 +335,12 @@ func (UnimplementedProjectServiceServer) GetGig(context.Context, *GetById) (*Gig
 }
 func (UnimplementedProjectServiceServer) GetAllFreelancerGigs(*GetByUserId, ProjectService_GetAllFreelancerGigsServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetAllFreelancerGigs not implemented")
+}
+func (UnimplementedProjectServiceServer) ShowIntrest(context.Context, *IntrestRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ShowIntrest not implemented")
+}
+func (UnimplementedProjectServiceServer) GetAllIntrest(context.Context, *GetAllIntrestRequest) (*IntrestResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllIntrest not implemented")
 }
 func (UnimplementedProjectServiceServer) AddPackageType(context.Context, *AddPackageTypeRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddPackageType not implemented")
@@ -427,6 +455,42 @@ type projectServiceGetAllFreelancerGigsServer struct {
 
 func (x *projectServiceGetAllFreelancerGigsServer) Send(m *GigResponse) error {
 	return x.ServerStream.SendMsg(m)
+}
+
+func _ProjectService_ShowIntrest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IntrestRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProjectServiceServer).ShowIntrest(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/project.ProjectService/ShowIntrest",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProjectServiceServer).ShowIntrest(ctx, req.(*IntrestRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProjectService_GetAllIntrest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllIntrestRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProjectServiceServer).GetAllIntrest(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/project.ProjectService/GetAllIntrest",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProjectServiceServer).GetAllIntrest(ctx, req.(*GetAllIntrestRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _ProjectService_AddPackageType_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -621,6 +685,14 @@ var ProjectService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetGig",
 			Handler:    _ProjectService_GetGig_Handler,
+		},
+		{
+			MethodName: "ShowIntrest",
+			Handler:    _ProjectService_ShowIntrest_Handler,
+		},
+		{
+			MethodName: "GetAllIntrest",
+			Handler:    _ProjectService_GetAllIntrest_Handler,
 		},
 		{
 			MethodName: "AddPackageType",
