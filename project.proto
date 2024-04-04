@@ -76,9 +76,9 @@ message ClientRequestResponse {
     string id = 1;
     string clientId = 2;
     string title = 3;
-    string categoryId = 4;
-    string skillId = 5;
-    string price = 6;
+    int32 categoryId = 4;
+    int32 skillId = 5;
+    float price = 6;
     string description = 7;
     string deliveryDate = 8;
     repeated string images = 9;
