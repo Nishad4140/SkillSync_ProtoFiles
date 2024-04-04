@@ -12,7 +12,7 @@ service ProjectService {
     rpc GetGig(GetById) returns (GigResponse);
     rpc GetAllFreelancerGigs(GetByUserId) returns (stream GigResponse);
     rpc ShowIntrest(IntrestRequest) returns (google.protobuf.Empty);
-    rpc GetAllIntrest(GetAllIntrestRequest) returns (IntrestResponse);
+    rpc GetAllIntrest(GetAllIntrestRequest) returns (stream IntrestResponse);
 
     rpc AddPackageType(AddPackageTypeRequest) returns (google.protobuf.Empty);
     rpc EditPackageType(PackageTypeResponse) returns (google.protobuf.Empty);
