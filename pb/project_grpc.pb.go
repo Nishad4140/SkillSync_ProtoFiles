@@ -35,6 +35,7 @@ type ProjectServiceClient interface {
 	GetClientRequest(ctx context.Context, in *GetById, opts ...grpc.CallOption) (*ClientRequestResponse, error)
 	GetAllClientRequest(ctx context.Context, in *GetByUserId, opts ...grpc.CallOption) (ProjectService_GetAllClientRequestClient, error)
 	GetAllGigs(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (ProjectService_GetAllGigsClient, error)
+	GetAllClientRequestForFreelancers(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (ProjectService_GetAllClientRequestForFreelancersClient, error)
 }
 
 type projectServiceClient struct {
@@ -245,6 +246,38 @@ func (x *projectServiceGetAllGigsClient) Recv() (*GigResponse, error) {
 	return m, nil
 }
 
+func (c *projectServiceClient) GetAllClientRequestForFreelancers(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (ProjectService_GetAllClientRequestForFreelancersClient, error) {
+	stream, err := c.cc.NewStream(ctx, &ProjectService_ServiceDesc.Streams[4], "/project.ProjectService/GetAllClientRequestForFreelancers", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &projectServiceGetAllClientRequestForFreelancersClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type ProjectService_GetAllClientRequestForFreelancersClient interface {
+	Recv() (*ClientRequestResponse, error)
+	grpc.ClientStream
+}
+
+type projectServiceGetAllClientRequestForFreelancersClient struct {
+	grpc.ClientStream
+}
+
+func (x *projectServiceGetAllClientRequestForFreelancersClient) Recv() (*ClientRequestResponse, error) {
+	m := new(ClientRequestResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // ProjectServiceServer is the server API for ProjectService service.
 // All implementations must embed UnimplementedProjectServiceServer
 // for forward compatibility
@@ -261,6 +294,7 @@ type ProjectServiceServer interface {
 	GetClientRequest(context.Context, *GetById) (*ClientRequestResponse, error)
 	GetAllClientRequest(*GetByUserId, ProjectService_GetAllClientRequestServer) error
 	GetAllGigs(*emptypb.Empty, ProjectService_GetAllGigsServer) error
+	GetAllClientRequestForFreelancers(*emptypb.Empty, ProjectService_GetAllClientRequestForFreelancersServer) error
 	mustEmbedUnimplementedProjectServiceServer()
 }
 
@@ -303,6 +337,9 @@ func (UnimplementedProjectServiceServer) GetAllClientRequest(*GetByUserId, Proje
 }
 func (UnimplementedProjectServiceServer) GetAllGigs(*emptypb.Empty, ProjectService_GetAllGigsServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetAllGigs not implemented")
+}
+func (UnimplementedProjectServiceServer) GetAllClientRequestForFreelancers(*emptypb.Empty, ProjectService_GetAllClientRequestForFreelancersServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetAllClientRequestForFreelancers not implemented")
 }
 func (UnimplementedProjectServiceServer) mustEmbedUnimplementedProjectServiceServer() {}
 
@@ -545,6 +582,27 @@ func (x *projectServiceGetAllGigsServer) Send(m *GigResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
+func _ProjectService_GetAllClientRequestForFreelancers_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(emptypb.Empty)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(ProjectServiceServer).GetAllClientRequestForFreelancers(m, &projectServiceGetAllClientRequestForFreelancersServer{stream})
+}
+
+type ProjectService_GetAllClientRequestForFreelancersServer interface {
+	Send(*ClientRequestResponse) error
+	grpc.ServerStream
+}
+
+type projectServiceGetAllClientRequestForFreelancersServer struct {
+	grpc.ServerStream
+}
+
+func (x *projectServiceGetAllClientRequestForFreelancersServer) Send(m *ClientRequestResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // ProjectService_ServiceDesc is the grpc.ServiceDesc for ProjectService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -604,6 +662,11 @@ var ProjectService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "GetAllGigs",
 			Handler:       _ProjectService_GetAllGigs_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "GetAllClientRequestForFreelancers",
+			Handler:       _ProjectService_GetAllClientRequestForFreelancers_Handler,
 			ServerStreams: true,
 		},
 	},
