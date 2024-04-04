@@ -22,7 +22,7 @@ service ProjectService {
     rpc GetAllClientRequest(GetByUserId) returns (stream ClientRequestResponse);
 
     rpc GetAllGigs(google.protobuf.Empty) returns (stream GigResponse);
-    rpc GetAllClientRequestForFreelancers(google.protobuf.Empty) returns (stream ClientRequestResponse);
+    rpc GetAllClientRequestForFreelancers(GetByUserId) returns (stream ClientRequestResponse);
 }
 
 message CreateGigRequest {
