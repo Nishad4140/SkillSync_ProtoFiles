@@ -36,6 +36,7 @@ type ProjectServiceClient interface {
 	ClientUpdateRequest(ctx context.Context, in *ClientRequestResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetClientRequest(ctx context.Context, in *GetById, opts ...grpc.CallOption) (*ClientRequestResponse, error)
 	GetAllClientRequest(ctx context.Context, in *GetByUserId, opts ...grpc.CallOption) (ProjectService_GetAllClientRequestClient, error)
+	ClientIntrestAcknowledgment(ctx context.Context, in *IntrestAcknowledgmentRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetAllGigs(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (ProjectService_GetAllGigsClient, error)
 	GetAllClientRequestForFreelancers(ctx context.Context, in *GetByUserId, opts ...grpc.CallOption) (ProjectService_GetAllClientRequestForFreelancersClient, error)
 }
@@ -257,6 +258,15 @@ func (x *projectServiceGetAllClientRequestClient) Recv() (*ClientRequestResponse
 	return m, nil
 }
 
+func (c *projectServiceClient) ClientIntrestAcknowledgment(ctx context.Context, in *IntrestAcknowledgmentRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/project.ProjectService/ClientIntrestAcknowledgment", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *projectServiceClient) GetAllGigs(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (ProjectService_GetAllGigsClient, error) {
 	stream, err := c.cc.NewStream(ctx, &ProjectService_ServiceDesc.Streams[4], "/project.ProjectService/GetAllGigs", opts...)
 	if err != nil {
@@ -338,6 +348,7 @@ type ProjectServiceServer interface {
 	ClientUpdateRequest(context.Context, *ClientRequestResponse) (*emptypb.Empty, error)
 	GetClientRequest(context.Context, *GetById) (*ClientRequestResponse, error)
 	GetAllClientRequest(*GetByUserId, ProjectService_GetAllClientRequestServer) error
+	ClientIntrestAcknowledgment(context.Context, *IntrestAcknowledgmentRequest) (*emptypb.Empty, error)
 	GetAllGigs(*emptypb.Empty, ProjectService_GetAllGigsServer) error
 	GetAllClientRequestForFreelancers(*GetByUserId, ProjectService_GetAllClientRequestForFreelancersServer) error
 	mustEmbedUnimplementedProjectServiceServer()
@@ -385,6 +396,9 @@ func (UnimplementedProjectServiceServer) GetClientRequest(context.Context, *GetB
 }
 func (UnimplementedProjectServiceServer) GetAllClientRequest(*GetByUserId, ProjectService_GetAllClientRequestServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetAllClientRequest not implemented")
+}
+func (UnimplementedProjectServiceServer) ClientIntrestAcknowledgment(context.Context, *IntrestAcknowledgmentRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ClientIntrestAcknowledgment not implemented")
 }
 func (UnimplementedProjectServiceServer) GetAllGigs(*emptypb.Empty, ProjectService_GetAllGigsServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetAllGigs not implemented")
@@ -651,6 +665,24 @@ func (x *projectServiceGetAllClientRequestServer) Send(m *ClientRequestResponse)
 	return x.ServerStream.SendMsg(m)
 }
 
+func _ProjectService_ClientIntrestAcknowledgment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IntrestAcknowledgmentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProjectServiceServer).ClientIntrestAcknowledgment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/project.ProjectService/ClientIntrestAcknowledgment",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProjectServiceServer).ClientIntrestAcknowledgment(ctx, req.(*IntrestAcknowledgmentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ProjectService_GetAllGigs_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(emptypb.Empty)
 	if err := stream.RecvMsg(m); err != nil {
@@ -735,6 +767,10 @@ var ProjectService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetClientRequest",
 			Handler:    _ProjectService_GetClientRequest_Handler,
+		},
+		{
+			MethodName: "ClientIntrestAcknowledgment",
+			Handler:    _ProjectService_ClientIntrestAcknowledgment_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
