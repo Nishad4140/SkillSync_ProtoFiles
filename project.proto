@@ -25,7 +25,7 @@ service ProjectService {
     rpc ClientIntrestAcknowledgment(IntrestAcknowledgmentRequest) returns (google.protobuf.Empty);
 
     rpc GetAllGigs(GigFilterQuery) returns (stream GigResponse);
-    rpc GetAllClientRequestForFreelancers(GetByUserId) returns (stream ClientRequestResponse);
+    rpc GetAllClientRequestForFreelancers(RequestFilterQuery) returns (stream ClientRequestResponse);
 }
 
 message CreateGigRequest {
