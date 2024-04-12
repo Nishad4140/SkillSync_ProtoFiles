@@ -24,7 +24,7 @@ service ProjectService {
     rpc GetAllClientRequest(GetByUserId) returns (stream ClientRequestResponse);
     rpc ClientIntrestAcknowledgment(IntrestAcknowledgmentRequest) returns (google.protobuf.Empty);
 
-    rpc GetAllGigs(google.protobuf.Empty) returns (stream GigResponse);
+    rpc GetAllGigs(GigFilterQuery) returns (stream GigResponse);
     rpc GetAllClientRequestForFreelancers(GetByUserId) returns (stream ClientRequestResponse);
 }
 
@@ -105,4 +105,21 @@ message IntrestResponse {
 message IntrestAcknowledgmentRequest {
     string intrestId = 1;
     string userId = 2;
+}
+message GigFilterQuery {
+    int32 page = 1;
+    int32 limit = 2;
+    string query = 3;
+    string filter = 4;
+    string sortBy = 5;
+    bool sortDesc = 6;
+}
+message RequestFilterQuery {
+    string userId = 1;
+    int32 page = 2;
+    int32 limit = 3;
+    string query = 4;
+    string filter = 5;
+    string sortBy = 6;
+    bool sortDesc = 7;
 }
