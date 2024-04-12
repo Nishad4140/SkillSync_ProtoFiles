@@ -35,7 +35,7 @@ type ProjectServiceClient interface {
 	ClientAddRequest(ctx context.Context, in *AddClientGigRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ClientUpdateRequest(ctx context.Context, in *ClientRequestResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetClientRequest(ctx context.Context, in *GetById, opts ...grpc.CallOption) (*ClientRequestResponse, error)
-	GetAllClientRequest(ctx context.Context, in *GetByUserId, opts ...grpc.CallOption) (ProjectService_GetAllClientRequestClient, error)
+	GetAllClientRequest(ctx context.Context, in *RequestFilterQuery, opts ...grpc.CallOption) (ProjectService_GetAllClientRequestClient, error)
 	ClientIntrestAcknowledgment(ctx context.Context, in *IntrestAcknowledgmentRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetAllGigs(ctx context.Context, in *GigFilterQuery, opts ...grpc.CallOption) (ProjectService_GetAllGigsClient, error)
 	GetAllClientRequestForFreelancers(ctx context.Context, in *GetByUserId, opts ...grpc.CallOption) (ProjectService_GetAllClientRequestForFreelancersClient, error)
@@ -226,7 +226,7 @@ func (c *projectServiceClient) GetClientRequest(ctx context.Context, in *GetById
 	return out, nil
 }
 
-func (c *projectServiceClient) GetAllClientRequest(ctx context.Context, in *GetByUserId, opts ...grpc.CallOption) (ProjectService_GetAllClientRequestClient, error) {
+func (c *projectServiceClient) GetAllClientRequest(ctx context.Context, in *RequestFilterQuery, opts ...grpc.CallOption) (ProjectService_GetAllClientRequestClient, error) {
 	stream, err := c.cc.NewStream(ctx, &ProjectService_ServiceDesc.Streams[3], "/project.ProjectService/GetAllClientRequest", opts...)
 	if err != nil {
 		return nil, err
@@ -347,7 +347,7 @@ type ProjectServiceServer interface {
 	ClientAddRequest(context.Context, *AddClientGigRequest) (*emptypb.Empty, error)
 	ClientUpdateRequest(context.Context, *ClientRequestResponse) (*emptypb.Empty, error)
 	GetClientRequest(context.Context, *GetById) (*ClientRequestResponse, error)
-	GetAllClientRequest(*GetByUserId, ProjectService_GetAllClientRequestServer) error
+	GetAllClientRequest(*RequestFilterQuery, ProjectService_GetAllClientRequestServer) error
 	ClientIntrestAcknowledgment(context.Context, *IntrestAcknowledgmentRequest) (*emptypb.Empty, error)
 	GetAllGigs(*GigFilterQuery, ProjectService_GetAllGigsServer) error
 	GetAllClientRequestForFreelancers(*GetByUserId, ProjectService_GetAllClientRequestForFreelancersServer) error
@@ -394,7 +394,7 @@ func (UnimplementedProjectServiceServer) ClientUpdateRequest(context.Context, *C
 func (UnimplementedProjectServiceServer) GetClientRequest(context.Context, *GetById) (*ClientRequestResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetClientRequest not implemented")
 }
-func (UnimplementedProjectServiceServer) GetAllClientRequest(*GetByUserId, ProjectService_GetAllClientRequestServer) error {
+func (UnimplementedProjectServiceServer) GetAllClientRequest(*RequestFilterQuery, ProjectService_GetAllClientRequestServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetAllClientRequest not implemented")
 }
 func (UnimplementedProjectServiceServer) ClientIntrestAcknowledgment(context.Context, *IntrestAcknowledgmentRequest) (*emptypb.Empty, error) {
@@ -645,7 +645,7 @@ func _ProjectService_GetClientRequest_Handler(srv interface{}, ctx context.Conte
 }
 
 func _ProjectService_GetAllClientRequest_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(GetByUserId)
+	m := new(RequestFilterQuery)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}

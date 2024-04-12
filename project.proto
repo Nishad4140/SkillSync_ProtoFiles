@@ -21,7 +21,7 @@ service ProjectService {
     rpc ClientAddRequest(AddClientGigRequest) returns (google.protobuf.Empty);
     rpc ClientUpdateRequest(ClientRequestResponse) returns (google.protobuf.Empty);
     rpc GetClientRequest(GetById) returns (ClientRequestResponse);
-    rpc GetAllClientRequest(GetByUserId) returns (stream ClientRequestResponse);
+    rpc GetAllClientRequest(RequestFilterQuery) returns (stream ClientRequestResponse);
     rpc ClientIntrestAcknowledgment(IntrestAcknowledgmentRequest) returns (google.protobuf.Empty);
 
     rpc GetAllGigs(GigFilterQuery) returns (stream GigResponse);
