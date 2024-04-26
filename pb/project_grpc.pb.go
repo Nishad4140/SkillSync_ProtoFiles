@@ -37,6 +37,10 @@ type ProjectServiceClient interface {
 	GetClientRequest(ctx context.Context, in *GetById, opts ...grpc.CallOption) (*ClientRequestResponse, error)
 	GetAllClientRequest(ctx context.Context, in *RequestFilterQuery, opts ...grpc.CallOption) (ProjectService_GetAllClientRequestClient, error)
 	ClientIntrestAcknowledgment(ctx context.Context, in *IntrestAcknowledgmentRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	CreateProject(ctx context.Context, in *ProjectRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UpdateProject(ctx context.Context, in *ProjectResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetProject(ctx context.Context, in *GetProjectById, opts ...grpc.CallOption) (*ProjectResponse, error)
+	GetAllProjects(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (ProjectService_GetAllProjectsClient, error)
 	GetAllGigs(ctx context.Context, in *GigFilterQuery, opts ...grpc.CallOption) (ProjectService_GetAllGigsClient, error)
 	GetAllClientRequestForFreelancers(ctx context.Context, in *RequestFilterQuery, opts ...grpc.CallOption) (ProjectService_GetAllClientRequestForFreelancersClient, error)
 }
@@ -267,8 +271,67 @@ func (c *projectServiceClient) ClientIntrestAcknowledgment(ctx context.Context, 
 	return out, nil
 }
 
+func (c *projectServiceClient) CreateProject(ctx context.Context, in *ProjectRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/project.ProjectService/CreateProject", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *projectServiceClient) UpdateProject(ctx context.Context, in *ProjectResponse, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/project.ProjectService/UpdateProject", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *projectServiceClient) GetProject(ctx context.Context, in *GetProjectById, opts ...grpc.CallOption) (*ProjectResponse, error) {
+	out := new(ProjectResponse)
+	err := c.cc.Invoke(ctx, "/project.ProjectService/GetProject", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *projectServiceClient) GetAllProjects(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (ProjectService_GetAllProjectsClient, error) {
+	stream, err := c.cc.NewStream(ctx, &ProjectService_ServiceDesc.Streams[4], "/project.ProjectService/GetAllProjects", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &projectServiceGetAllProjectsClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type ProjectService_GetAllProjectsClient interface {
+	Recv() (*ProjectResponse, error)
+	grpc.ClientStream
+}
+
+type projectServiceGetAllProjectsClient struct {
+	grpc.ClientStream
+}
+
+func (x *projectServiceGetAllProjectsClient) Recv() (*ProjectResponse, error) {
+	m := new(ProjectResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 func (c *projectServiceClient) GetAllGigs(ctx context.Context, in *GigFilterQuery, opts ...grpc.CallOption) (ProjectService_GetAllGigsClient, error) {
-	stream, err := c.cc.NewStream(ctx, &ProjectService_ServiceDesc.Streams[4], "/project.ProjectService/GetAllGigs", opts...)
+	stream, err := c.cc.NewStream(ctx, &ProjectService_ServiceDesc.Streams[5], "/project.ProjectService/GetAllGigs", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -300,7 +363,7 @@ func (x *projectServiceGetAllGigsClient) Recv() (*GigResponse, error) {
 }
 
 func (c *projectServiceClient) GetAllClientRequestForFreelancers(ctx context.Context, in *RequestFilterQuery, opts ...grpc.CallOption) (ProjectService_GetAllClientRequestForFreelancersClient, error) {
-	stream, err := c.cc.NewStream(ctx, &ProjectService_ServiceDesc.Streams[5], "/project.ProjectService/GetAllClientRequestForFreelancers", opts...)
+	stream, err := c.cc.NewStream(ctx, &ProjectService_ServiceDesc.Streams[6], "/project.ProjectService/GetAllClientRequestForFreelancers", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -349,6 +412,10 @@ type ProjectServiceServer interface {
 	GetClientRequest(context.Context, *GetById) (*ClientRequestResponse, error)
 	GetAllClientRequest(*RequestFilterQuery, ProjectService_GetAllClientRequestServer) error
 	ClientIntrestAcknowledgment(context.Context, *IntrestAcknowledgmentRequest) (*emptypb.Empty, error)
+	CreateProject(context.Context, *ProjectRequest) (*emptypb.Empty, error)
+	UpdateProject(context.Context, *ProjectResponse) (*emptypb.Empty, error)
+	GetProject(context.Context, *GetProjectById) (*ProjectResponse, error)
+	GetAllProjects(*emptypb.Empty, ProjectService_GetAllProjectsServer) error
 	GetAllGigs(*GigFilterQuery, ProjectService_GetAllGigsServer) error
 	GetAllClientRequestForFreelancers(*RequestFilterQuery, ProjectService_GetAllClientRequestForFreelancersServer) error
 	mustEmbedUnimplementedProjectServiceServer()
@@ -399,6 +466,18 @@ func (UnimplementedProjectServiceServer) GetAllClientRequest(*RequestFilterQuery
 }
 func (UnimplementedProjectServiceServer) ClientIntrestAcknowledgment(context.Context, *IntrestAcknowledgmentRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ClientIntrestAcknowledgment not implemented")
+}
+func (UnimplementedProjectServiceServer) CreateProject(context.Context, *ProjectRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateProject not implemented")
+}
+func (UnimplementedProjectServiceServer) UpdateProject(context.Context, *ProjectResponse) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateProject not implemented")
+}
+func (UnimplementedProjectServiceServer) GetProject(context.Context, *GetProjectById) (*ProjectResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetProject not implemented")
+}
+func (UnimplementedProjectServiceServer) GetAllProjects(*emptypb.Empty, ProjectService_GetAllProjectsServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetAllProjects not implemented")
 }
 func (UnimplementedProjectServiceServer) GetAllGigs(*GigFilterQuery, ProjectService_GetAllGigsServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetAllGigs not implemented")
@@ -683,6 +762,81 @@ func _ProjectService_ClientIntrestAcknowledgment_Handler(srv interface{}, ctx co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ProjectService_CreateProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProjectRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProjectServiceServer).CreateProject(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/project.ProjectService/CreateProject",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProjectServiceServer).CreateProject(ctx, req.(*ProjectRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProjectService_UpdateProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProjectResponse)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProjectServiceServer).UpdateProject(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/project.ProjectService/UpdateProject",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProjectServiceServer).UpdateProject(ctx, req.(*ProjectResponse))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProjectService_GetProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetProjectById)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProjectServiceServer).GetProject(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/project.ProjectService/GetProject",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProjectServiceServer).GetProject(ctx, req.(*GetProjectById))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProjectService_GetAllProjects_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(emptypb.Empty)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(ProjectServiceServer).GetAllProjects(m, &projectServiceGetAllProjectsServer{stream})
+}
+
+type ProjectService_GetAllProjectsServer interface {
+	Send(*ProjectResponse) error
+	grpc.ServerStream
+}
+
+type projectServiceGetAllProjectsServer struct {
+	grpc.ServerStream
+}
+
+func (x *projectServiceGetAllProjectsServer) Send(m *ProjectResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 func _ProjectService_GetAllGigs_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(GigFilterQuery)
 	if err := stream.RecvMsg(m); err != nil {
@@ -772,6 +926,18 @@ var ProjectService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "ClientIntrestAcknowledgment",
 			Handler:    _ProjectService_ClientIntrestAcknowledgment_Handler,
 		},
+		{
+			MethodName: "CreateProject",
+			Handler:    _ProjectService_CreateProject_Handler,
+		},
+		{
+			MethodName: "UpdateProject",
+			Handler:    _ProjectService_UpdateProject_Handler,
+		},
+		{
+			MethodName: "GetProject",
+			Handler:    _ProjectService_GetProject_Handler,
+		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
@@ -792,6 +958,11 @@ var ProjectService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "GetAllClientRequest",
 			Handler:       _ProjectService_GetAllClientRequest_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "GetAllProjects",
+			Handler:       _ProjectService_GetAllProjects_Handler,
 			ServerStreams: true,
 		},
 		{
