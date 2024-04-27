@@ -167,6 +167,7 @@ message FileRequest {
     string filePath = 2;
     bytes imageData = 3;
     string userId = 4;
+    string projectId = 5;
 }
 message FileResponse {
     string url = 1;
