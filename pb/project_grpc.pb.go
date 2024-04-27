@@ -29,6 +29,7 @@ type ProjectServiceClient interface {
 	GetAllFreelancerGigs(ctx context.Context, in *GetByUserId, opts ...grpc.CallOption) (ProjectService_GetAllFreelancerGigsClient, error)
 	ShowIntrest(ctx context.Context, in *IntrestRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetAllIntrest(ctx context.Context, in *GetAllIntrestRequest, opts ...grpc.CallOption) (ProjectService_GetAllIntrestClient, error)
+	FreelancerProjectAcknowledgment(ctx context.Context, in *ProjectAcknowledgmentRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	AddPackageType(ctx context.Context, in *AddPackageTypeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	EditPackageType(ctx context.Context, in *PackageTypeResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetPackageType(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (ProjectService_GetPackageTypeClient, error)
@@ -153,6 +154,15 @@ func (x *projectServiceGetAllIntrestClient) Recv() (*IntrestResponse, error) {
 		return nil, err
 	}
 	return m, nil
+}
+
+func (c *projectServiceClient) FreelancerProjectAcknowledgment(ctx context.Context, in *ProjectAcknowledgmentRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/project.ProjectService/FreelancerProjectAcknowledgment", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *projectServiceClient) AddPackageType(ctx context.Context, in *AddPackageTypeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
@@ -424,6 +434,7 @@ type ProjectServiceServer interface {
 	GetAllFreelancerGigs(*GetByUserId, ProjectService_GetAllFreelancerGigsServer) error
 	ShowIntrest(context.Context, *IntrestRequest) (*emptypb.Empty, error)
 	GetAllIntrest(*GetAllIntrestRequest, ProjectService_GetAllIntrestServer) error
+	FreelancerProjectAcknowledgment(context.Context, *ProjectAcknowledgmentRequest) (*emptypb.Empty, error)
 	AddPackageType(context.Context, *AddPackageTypeRequest) (*emptypb.Empty, error)
 	EditPackageType(context.Context, *PackageTypeResponse) (*emptypb.Empty, error)
 	GetPackageType(*emptypb.Empty, ProjectService_GetPackageTypeServer) error
@@ -464,6 +475,9 @@ func (UnimplementedProjectServiceServer) ShowIntrest(context.Context, *IntrestRe
 }
 func (UnimplementedProjectServiceServer) GetAllIntrest(*GetAllIntrestRequest, ProjectService_GetAllIntrestServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetAllIntrest not implemented")
+}
+func (UnimplementedProjectServiceServer) FreelancerProjectAcknowledgment(context.Context, *ProjectAcknowledgmentRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FreelancerProjectAcknowledgment not implemented")
 }
 func (UnimplementedProjectServiceServer) AddPackageType(context.Context, *AddPackageTypeRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddPackageType not implemented")
@@ -638,6 +652,24 @@ type projectServiceGetAllIntrestServer struct {
 
 func (x *projectServiceGetAllIntrestServer) Send(m *IntrestResponse) error {
 	return x.ServerStream.SendMsg(m)
+}
+
+func _ProjectService_FreelancerProjectAcknowledgment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProjectAcknowledgmentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProjectServiceServer).FreelancerProjectAcknowledgment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/project.ProjectService/FreelancerProjectAcknowledgment",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProjectServiceServer).FreelancerProjectAcknowledgment(ctx, req.(*ProjectAcknowledgmentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _ProjectService_AddPackageType_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -965,6 +997,10 @@ var ProjectService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ShowIntrest",
 			Handler:    _ProjectService_ShowIntrest_Handler,
+		},
+		{
+			MethodName: "FreelancerProjectAcknowledgment",
+			Handler:    _ProjectService_FreelancerProjectAcknowledgment_Handler,
 		},
 		{
 			MethodName: "AddPackageType",

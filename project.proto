@@ -13,6 +13,7 @@ service ProjectService {
     rpc GetAllFreelancerGigs(GetByUserId) returns (stream GigResponse);
     rpc ShowIntrest(IntrestRequest) returns (google.protobuf.Empty);
     rpc GetAllIntrest(GetAllIntrestRequest) returns (stream IntrestResponse);
+    rpc FreelancerProjectAcknowledgment(ProjectAcknowledgmentRequest) returns (google.protobuf.Empty);
 
     rpc AddPackageType(AddPackageTypeRequest) returns (google.protobuf.Empty);
     rpc EditPackageType(PackageTypeResponse) returns (google.protobuf.Empty);
@@ -152,4 +153,9 @@ message GetProjectById {
 message UpdateProjectStatusRequest {
     string userId = 1;
     string status = 2;
+}
+message ProjectAcknowledgmentRequest {
+    string projectId = 1;
+    string freelancerId = 2;
+    bool isAcknowledged = 3;
 }
