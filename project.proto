@@ -27,7 +27,7 @@ service ProjectService {
     rpc CreateProject(ProjectRequest) returns (google.protobuf.Empty);
     rpc UpdateProject(ProjectResponse) returns (google.protobuf.Empty);
     rpc GetProject(GetProjectById) returns (ProjectResponse);
-    rpc GetAllProjects(google.protobuf.Empty) returns (stream ProjectResponse);
+    rpc GetAllProjects(GigFilterQuery) returns (stream ProjectResponse);
     rpc RemoveProject(GetProjectById) returns (google.protobuf.Empty);
     rpc FreelancerUpdateProjectStatus(UpdateProjectStatusRequest) returns (google.protobuf.Empty);
 

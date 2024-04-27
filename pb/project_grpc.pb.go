@@ -41,7 +41,7 @@ type ProjectServiceClient interface {
 	CreateProject(ctx context.Context, in *ProjectRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UpdateProject(ctx context.Context, in *ProjectResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetProject(ctx context.Context, in *GetProjectById, opts ...grpc.CallOption) (*ProjectResponse, error)
-	GetAllProjects(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (ProjectService_GetAllProjectsClient, error)
+	GetAllProjects(ctx context.Context, in *GigFilterQuery, opts ...grpc.CallOption) (ProjectService_GetAllProjectsClient, error)
 	RemoveProject(ctx context.Context, in *GetProjectById, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	FreelancerUpdateProjectStatus(ctx context.Context, in *UpdateProjectStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetAllGigs(ctx context.Context, in *GigFilterQuery, opts ...grpc.CallOption) (ProjectService_GetAllGigsClient, error)
@@ -310,7 +310,7 @@ func (c *projectServiceClient) GetProject(ctx context.Context, in *GetProjectByI
 	return out, nil
 }
 
-func (c *projectServiceClient) GetAllProjects(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (ProjectService_GetAllProjectsClient, error) {
+func (c *projectServiceClient) GetAllProjects(ctx context.Context, in *GigFilterQuery, opts ...grpc.CallOption) (ProjectService_GetAllProjectsClient, error) {
 	stream, err := c.cc.NewStream(ctx, &ProjectService_ServiceDesc.Streams[4], "/project.ProjectService/GetAllProjects", opts...)
 	if err != nil {
 		return nil, err
@@ -446,7 +446,7 @@ type ProjectServiceServer interface {
 	CreateProject(context.Context, *ProjectRequest) (*emptypb.Empty, error)
 	UpdateProject(context.Context, *ProjectResponse) (*emptypb.Empty, error)
 	GetProject(context.Context, *GetProjectById) (*ProjectResponse, error)
-	GetAllProjects(*emptypb.Empty, ProjectService_GetAllProjectsServer) error
+	GetAllProjects(*GigFilterQuery, ProjectService_GetAllProjectsServer) error
 	RemoveProject(context.Context, *GetProjectById) (*emptypb.Empty, error)
 	FreelancerUpdateProjectStatus(context.Context, *UpdateProjectStatusRequest) (*emptypb.Empty, error)
 	GetAllGigs(*GigFilterQuery, ProjectService_GetAllGigsServer) error
@@ -512,7 +512,7 @@ func (UnimplementedProjectServiceServer) UpdateProject(context.Context, *Project
 func (UnimplementedProjectServiceServer) GetProject(context.Context, *GetProjectById) (*ProjectResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProject not implemented")
 }
-func (UnimplementedProjectServiceServer) GetAllProjects(*emptypb.Empty, ProjectService_GetAllProjectsServer) error {
+func (UnimplementedProjectServiceServer) GetAllProjects(*GigFilterQuery, ProjectService_GetAllProjectsServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetAllProjects not implemented")
 }
 func (UnimplementedProjectServiceServer) RemoveProject(context.Context, *GetProjectById) (*emptypb.Empty, error) {
@@ -877,7 +877,7 @@ func _ProjectService_GetProject_Handler(srv interface{}, ctx context.Context, de
 }
 
 func _ProjectService_GetAllProjects_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(emptypb.Empty)
+	m := new(GigFilterQuery)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
