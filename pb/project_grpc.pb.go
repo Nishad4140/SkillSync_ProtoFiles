@@ -41,6 +41,7 @@ type ProjectServiceClient interface {
 	UpdateProject(ctx context.Context, in *ProjectResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetProject(ctx context.Context, in *GetProjectById, opts ...grpc.CallOption) (*ProjectResponse, error)
 	GetAllProjects(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (ProjectService_GetAllProjectsClient, error)
+	RemoveProject(ctx context.Context, in *GetProjectById, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetAllGigs(ctx context.Context, in *GigFilterQuery, opts ...grpc.CallOption) (ProjectService_GetAllGigsClient, error)
 	GetAllClientRequestForFreelancers(ctx context.Context, in *RequestFilterQuery, opts ...grpc.CallOption) (ProjectService_GetAllClientRequestForFreelancersClient, error)
 }
@@ -330,6 +331,15 @@ func (x *projectServiceGetAllProjectsClient) Recv() (*ProjectResponse, error) {
 	return m, nil
 }
 
+func (c *projectServiceClient) RemoveProject(ctx context.Context, in *GetProjectById, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/project.ProjectService/RemoveProject", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *projectServiceClient) GetAllGigs(ctx context.Context, in *GigFilterQuery, opts ...grpc.CallOption) (ProjectService_GetAllGigsClient, error) {
 	stream, err := c.cc.NewStream(ctx, &ProjectService_ServiceDesc.Streams[5], "/project.ProjectService/GetAllGigs", opts...)
 	if err != nil {
@@ -416,6 +426,7 @@ type ProjectServiceServer interface {
 	UpdateProject(context.Context, *ProjectResponse) (*emptypb.Empty, error)
 	GetProject(context.Context, *GetProjectById) (*ProjectResponse, error)
 	GetAllProjects(*emptypb.Empty, ProjectService_GetAllProjectsServer) error
+	RemoveProject(context.Context, *GetProjectById) (*emptypb.Empty, error)
 	GetAllGigs(*GigFilterQuery, ProjectService_GetAllGigsServer) error
 	GetAllClientRequestForFreelancers(*RequestFilterQuery, ProjectService_GetAllClientRequestForFreelancersServer) error
 	mustEmbedUnimplementedProjectServiceServer()
@@ -478,6 +489,9 @@ func (UnimplementedProjectServiceServer) GetProject(context.Context, *GetProject
 }
 func (UnimplementedProjectServiceServer) GetAllProjects(*emptypb.Empty, ProjectService_GetAllProjectsServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetAllProjects not implemented")
+}
+func (UnimplementedProjectServiceServer) RemoveProject(context.Context, *GetProjectById) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveProject not implemented")
 }
 func (UnimplementedProjectServiceServer) GetAllGigs(*GigFilterQuery, ProjectService_GetAllGigsServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetAllGigs not implemented")
@@ -837,6 +851,24 @@ func (x *projectServiceGetAllProjectsServer) Send(m *ProjectResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
+func _ProjectService_RemoveProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetProjectById)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProjectServiceServer).RemoveProject(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/project.ProjectService/RemoveProject",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProjectServiceServer).RemoveProject(ctx, req.(*GetProjectById))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ProjectService_GetAllGigs_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(GigFilterQuery)
 	if err := stream.RecvMsg(m); err != nil {
@@ -937,6 +969,10 @@ var ProjectService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetProject",
 			Handler:    _ProjectService_GetProject_Handler,
+		},
+		{
+			MethodName: "RemoveProject",
+			Handler:    _ProjectService_RemoveProject_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
