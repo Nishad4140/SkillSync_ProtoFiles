@@ -44,6 +44,8 @@ type ProjectServiceClient interface {
 	GetAllProjects(ctx context.Context, in *GigFilterQuery, opts ...grpc.CallOption) (ProjectService_GetAllProjectsClient, error)
 	RemoveProject(ctx context.Context, in *GetProjectById, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	FreelancerUpdateProjectStatus(ctx context.Context, in *UpdateProjectStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	FreelancerUploadFile(ctx context.Context, in *FileRequest, opts ...grpc.CallOption) (*FileResponse, error)
+	ClientGetFile(ctx context.Context, in *GetProjectById, opts ...grpc.CallOption) (*FileResponse, error)
 	GetAllGigs(ctx context.Context, in *GigFilterQuery, opts ...grpc.CallOption) (ProjectService_GetAllGigsClient, error)
 	GetAllClientRequestForFreelancers(ctx context.Context, in *RequestFilterQuery, opts ...grpc.CallOption) (ProjectService_GetAllClientRequestForFreelancersClient, error)
 }
@@ -360,6 +362,24 @@ func (c *projectServiceClient) FreelancerUpdateProjectStatus(ctx context.Context
 	return out, nil
 }
 
+func (c *projectServiceClient) FreelancerUploadFile(ctx context.Context, in *FileRequest, opts ...grpc.CallOption) (*FileResponse, error) {
+	out := new(FileResponse)
+	err := c.cc.Invoke(ctx, "/project.ProjectService/FreelancerUploadFile", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *projectServiceClient) ClientGetFile(ctx context.Context, in *GetProjectById, opts ...grpc.CallOption) (*FileResponse, error) {
+	out := new(FileResponse)
+	err := c.cc.Invoke(ctx, "/project.ProjectService/ClientGetFile", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *projectServiceClient) GetAllGigs(ctx context.Context, in *GigFilterQuery, opts ...grpc.CallOption) (ProjectService_GetAllGigsClient, error) {
 	stream, err := c.cc.NewStream(ctx, &ProjectService_ServiceDesc.Streams[5], "/project.ProjectService/GetAllGigs", opts...)
 	if err != nil {
@@ -449,6 +469,8 @@ type ProjectServiceServer interface {
 	GetAllProjects(*GigFilterQuery, ProjectService_GetAllProjectsServer) error
 	RemoveProject(context.Context, *GetProjectById) (*emptypb.Empty, error)
 	FreelancerUpdateProjectStatus(context.Context, *UpdateProjectStatusRequest) (*emptypb.Empty, error)
+	FreelancerUploadFile(context.Context, *FileRequest) (*FileResponse, error)
+	ClientGetFile(context.Context, *GetProjectById) (*FileResponse, error)
 	GetAllGigs(*GigFilterQuery, ProjectService_GetAllGigsServer) error
 	GetAllClientRequestForFreelancers(*RequestFilterQuery, ProjectService_GetAllClientRequestForFreelancersServer) error
 	mustEmbedUnimplementedProjectServiceServer()
@@ -520,6 +542,12 @@ func (UnimplementedProjectServiceServer) RemoveProject(context.Context, *GetProj
 }
 func (UnimplementedProjectServiceServer) FreelancerUpdateProjectStatus(context.Context, *UpdateProjectStatusRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FreelancerUpdateProjectStatus not implemented")
+}
+func (UnimplementedProjectServiceServer) FreelancerUploadFile(context.Context, *FileRequest) (*FileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FreelancerUploadFile not implemented")
+}
+func (UnimplementedProjectServiceServer) ClientGetFile(context.Context, *GetProjectById) (*FileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ClientGetFile not implemented")
 }
 func (UnimplementedProjectServiceServer) GetAllGigs(*GigFilterQuery, ProjectService_GetAllGigsServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetAllGigs not implemented")
@@ -933,6 +961,42 @@ func _ProjectService_FreelancerUpdateProjectStatus_Handler(srv interface{}, ctx 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ProjectService_FreelancerUploadFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProjectServiceServer).FreelancerUploadFile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/project.ProjectService/FreelancerUploadFile",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProjectServiceServer).FreelancerUploadFile(ctx, req.(*FileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProjectService_ClientGetFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetProjectById)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProjectServiceServer).ClientGetFile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/project.ProjectService/ClientGetFile",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProjectServiceServer).ClientGetFile(ctx, req.(*GetProjectById))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ProjectService_GetAllGigs_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(GigFilterQuery)
 	if err := stream.RecvMsg(m); err != nil {
@@ -1045,6 +1109,14 @@ var ProjectService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "FreelancerUpdateProjectStatus",
 			Handler:    _ProjectService_FreelancerUpdateProjectStatus_Handler,
+		},
+		{
+			MethodName: "FreelancerUploadFile",
+			Handler:    _ProjectService_FreelancerUploadFile_Handler,
+		},
+		{
+			MethodName: "ClientGetFile",
+			Handler:    _ProjectService_ClientGetFile_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

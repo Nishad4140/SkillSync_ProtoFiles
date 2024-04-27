@@ -30,6 +30,8 @@ service ProjectService {
     rpc GetAllProjects(GigFilterQuery) returns (stream ProjectResponse);
     rpc RemoveProject(GetProjectById) returns (google.protobuf.Empty);
     rpc FreelancerUpdateProjectStatus(UpdateProjectStatusRequest) returns (google.protobuf.Empty);
+    rpc FreelancerUploadFile(FileRequest) returns (FileResponse);
+    rpc ClientGetFile(GetProjectById) returns (FileResponse);
 
     rpc GetAllGigs(GigFilterQuery) returns (stream GigResponse);
     rpc GetAllClientRequestForFreelancers(RequestFilterQuery) returns (stream ClientRequestResponse);
@@ -159,4 +161,13 @@ message ProjectAcknowledgmentRequest {
     string projectId = 1;
     string freelancerId = 2;
     bool isAcknowledged = 3;
+}
+message FileRequest {
+    string objectName = 1;
+    string filePath = 2;
+    bytes imageData = 3;
+    string userId = 4;
+}
+message FileResponse {
+    string url = 1;
 }
