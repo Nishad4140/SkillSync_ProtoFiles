@@ -155,6 +155,7 @@ message ProjectResponse {
 }
 message GetProjectById {
     string id = 1;
+    string userId = 2;
 }
 message UpdateProjectStatusRequest {
     string userId = 1;
