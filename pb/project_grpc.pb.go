@@ -40,7 +40,7 @@ type ProjectServiceClient interface {
 	GetClientRequest(ctx context.Context, in *GetById, opts ...grpc.CallOption) (*ClientRequestResponse, error)
 	GetAllClientRequest(ctx context.Context, in *RequestFilterQuery, opts ...grpc.CallOption) (ProjectService_GetAllClientRequestClient, error)
 	ClientIntrestAcknowledgment(ctx context.Context, in *IntrestAcknowledgmentRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	CreateProject(ctx context.Context, in *ProjectRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	CreateProject(ctx context.Context, in *ProjectRequest, opts ...grpc.CallOption) (*ProjectResponse, error)
 	UpdateProject(ctx context.Context, in *ProjectResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetProject(ctx context.Context, in *GetProjectById, opts ...grpc.CallOption) (*ProjectResponse, error)
 	GetAllProjects(ctx context.Context, in *GigFilterQuery, opts ...grpc.CallOption) (ProjectService_GetAllProjectsClient, error)
@@ -305,8 +305,8 @@ func (c *projectServiceClient) ClientIntrestAcknowledgment(ctx context.Context, 
 	return out, nil
 }
 
-func (c *projectServiceClient) CreateProject(ctx context.Context, in *ProjectRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
+func (c *projectServiceClient) CreateProject(ctx context.Context, in *ProjectRequest, opts ...grpc.CallOption) (*ProjectResponse, error) {
+	out := new(ProjectResponse)
 	err := c.cc.Invoke(ctx, "/project.ProjectService/CreateProject", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -485,7 +485,7 @@ type ProjectServiceServer interface {
 	GetClientRequest(context.Context, *GetById) (*ClientRequestResponse, error)
 	GetAllClientRequest(*RequestFilterQuery, ProjectService_GetAllClientRequestServer) error
 	ClientIntrestAcknowledgment(context.Context, *IntrestAcknowledgmentRequest) (*emptypb.Empty, error)
-	CreateProject(context.Context, *ProjectRequest) (*emptypb.Empty, error)
+	CreateProject(context.Context, *ProjectRequest) (*ProjectResponse, error)
 	UpdateProject(context.Context, *ProjectResponse) (*emptypb.Empty, error)
 	GetProject(context.Context, *GetProjectById) (*ProjectResponse, error)
 	GetAllProjects(*GigFilterQuery, ProjectService_GetAllProjectsServer) error
@@ -553,7 +553,7 @@ func (UnimplementedProjectServiceServer) GetAllClientRequest(*RequestFilterQuery
 func (UnimplementedProjectServiceServer) ClientIntrestAcknowledgment(context.Context, *IntrestAcknowledgmentRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ClientIntrestAcknowledgment not implemented")
 }
-func (UnimplementedProjectServiceServer) CreateProject(context.Context, *ProjectRequest) (*emptypb.Empty, error) {
+func (UnimplementedProjectServiceServer) CreateProject(context.Context, *ProjectRequest) (*ProjectResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateProject not implemented")
 }
 func (UnimplementedProjectServiceServer) UpdateProject(context.Context, *ProjectResponse) (*emptypb.Empty, error) {

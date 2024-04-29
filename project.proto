@@ -26,7 +26,7 @@ service ProjectService {
     rpc GetClientRequest(GetById) returns (ClientRequestResponse);
     rpc GetAllClientRequest(RequestFilterQuery) returns (stream ClientRequestResponse);
     rpc ClientIntrestAcknowledgment(IntrestAcknowledgmentRequest) returns (google.protobuf.Empty);
-    rpc CreateProject(ProjectRequest) returns (google.protobuf.Empty);
+    rpc CreateProject(ProjectRequest) returns (ProjectResponse);
     rpc UpdateProject(ProjectResponse) returns (google.protobuf.Empty);
     rpc GetProject(GetProjectById) returns (ProjectResponse);
     rpc GetAllProjects(GigFilterQuery) returns (stream ProjectResponse);
@@ -141,7 +141,6 @@ message ProjectRequest {
     string freelancerId = 2;
     string gigId = 3;
     string endDate = 4;
-    float price = 6;
 }
 message ProjectResponse {
     string id = 1;
@@ -151,7 +150,6 @@ message ProjectResponse {
     string startDate = 5;
     string endDate = 6;
     string status = 7;
-    string price = 8;
 }
 message GetProjectById {
     string id = 1;
