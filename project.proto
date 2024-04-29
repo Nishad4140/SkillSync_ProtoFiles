@@ -11,6 +11,8 @@ service ProjectService {
     rpc UpdateGig(GigResponse) returns (google.protobuf.Empty);
     rpc GetGig(GetById) returns (GigResponse);
     rpc GetAllFreelancerGigs(GetByUserId) returns (stream GigResponse);
+    rpc GiveAccessToPrivateGigs(GiveAccessRequest) returns (google.protobuf.Empty);
+    rpc RemoveAccessToPrivateGigs(GiveAccessRequest) returns (google.protobuf.Empty);
     rpc ShowIntrest(IntrestRequest) returns (google.protobuf.Empty);
     rpc GetAllIntrest(GetAllIntrestRequest) returns (stream IntrestResponse);
     rpc FreelancerProjectAcknowledgment(ProjectAcknowledgmentRequest) returns (google.protobuf.Empty);
@@ -46,6 +48,7 @@ message CreateGigRequest {
     int32 packageTypeId = 6;
     float price = 7;
     string delivaryDays = 8;
+    bool isPrivate = 9;
 }
 message GigResponse {
     string id = 1;
@@ -58,6 +61,7 @@ message GigResponse {
     float price = 8;
     string delivaryDays = 9;
     repeated string images = 10;
+    bool isPrivate = 11;
 }
 message GetById {
     string id = 1;
@@ -171,4 +175,8 @@ message FileRequest {
 }
 message FileResponse {
     string url = 1;
+}
+message GiveAccessRequest {
+    string gigId = 1;
+    string userId = 2;
 }

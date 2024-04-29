@@ -27,6 +27,8 @@ type ProjectServiceClient interface {
 	UpdateGig(ctx context.Context, in *GigResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetGig(ctx context.Context, in *GetById, opts ...grpc.CallOption) (*GigResponse, error)
 	GetAllFreelancerGigs(ctx context.Context, in *GetByUserId, opts ...grpc.CallOption) (ProjectService_GetAllFreelancerGigsClient, error)
+	GiveAccessToPrivateGigs(ctx context.Context, in *GiveAccessRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	RemoveAccessToPrivateGigs(ctx context.Context, in *GiveAccessRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ShowIntrest(ctx context.Context, in *IntrestRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetAllIntrest(ctx context.Context, in *GetAllIntrestRequest, opts ...grpc.CallOption) (ProjectService_GetAllIntrestClient, error)
 	FreelancerProjectAcknowledgment(ctx context.Context, in *ProjectAcknowledgmentRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -115,6 +117,24 @@ func (x *projectServiceGetAllFreelancerGigsClient) Recv() (*GigResponse, error) 
 		return nil, err
 	}
 	return m, nil
+}
+
+func (c *projectServiceClient) GiveAccessToPrivateGigs(ctx context.Context, in *GiveAccessRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/project.ProjectService/GiveAccessToPrivateGigs", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *projectServiceClient) RemoveAccessToPrivateGigs(ctx context.Context, in *GiveAccessRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/project.ProjectService/RemoveAccessToPrivateGigs", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *projectServiceClient) ShowIntrest(ctx context.Context, in *IntrestRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
@@ -452,6 +472,8 @@ type ProjectServiceServer interface {
 	UpdateGig(context.Context, *GigResponse) (*emptypb.Empty, error)
 	GetGig(context.Context, *GetById) (*GigResponse, error)
 	GetAllFreelancerGigs(*GetByUserId, ProjectService_GetAllFreelancerGigsServer) error
+	GiveAccessToPrivateGigs(context.Context, *GiveAccessRequest) (*emptypb.Empty, error)
+	RemoveAccessToPrivateGigs(context.Context, *GiveAccessRequest) (*emptypb.Empty, error)
 	ShowIntrest(context.Context, *IntrestRequest) (*emptypb.Empty, error)
 	GetAllIntrest(*GetAllIntrestRequest, ProjectService_GetAllIntrestServer) error
 	FreelancerProjectAcknowledgment(context.Context, *ProjectAcknowledgmentRequest) (*emptypb.Empty, error)
@@ -491,6 +513,12 @@ func (UnimplementedProjectServiceServer) GetGig(context.Context, *GetById) (*Gig
 }
 func (UnimplementedProjectServiceServer) GetAllFreelancerGigs(*GetByUserId, ProjectService_GetAllFreelancerGigsServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetAllFreelancerGigs not implemented")
+}
+func (UnimplementedProjectServiceServer) GiveAccessToPrivateGigs(context.Context, *GiveAccessRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GiveAccessToPrivateGigs not implemented")
+}
+func (UnimplementedProjectServiceServer) RemoveAccessToPrivateGigs(context.Context, *GiveAccessRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveAccessToPrivateGigs not implemented")
 }
 func (UnimplementedProjectServiceServer) ShowIntrest(context.Context, *IntrestRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ShowIntrest not implemented")
@@ -641,6 +669,42 @@ type projectServiceGetAllFreelancerGigsServer struct {
 
 func (x *projectServiceGetAllFreelancerGigsServer) Send(m *GigResponse) error {
 	return x.ServerStream.SendMsg(m)
+}
+
+func _ProjectService_GiveAccessToPrivateGigs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GiveAccessRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProjectServiceServer).GiveAccessToPrivateGigs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/project.ProjectService/GiveAccessToPrivateGigs",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProjectServiceServer).GiveAccessToPrivateGigs(ctx, req.(*GiveAccessRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProjectService_RemoveAccessToPrivateGigs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GiveAccessRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProjectServiceServer).RemoveAccessToPrivateGigs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/project.ProjectService/RemoveAccessToPrivateGigs",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProjectServiceServer).RemoveAccessToPrivateGigs(ctx, req.(*GiveAccessRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _ProjectService_ShowIntrest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -1057,6 +1121,14 @@ var ProjectService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetGig",
 			Handler:    _ProjectService_GetGig_Handler,
+		},
+		{
+			MethodName: "GiveAccessToPrivateGigs",
+			Handler:    _ProjectService_GiveAccessToPrivateGigs_Handler,
+		},
+		{
+			MethodName: "RemoveAccessToPrivateGigs",
+			Handler:    _ProjectService_RemoveAccessToPrivateGigs_Handler,
 		},
 		{
 			MethodName: "ShowIntrest",
