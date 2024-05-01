@@ -48,6 +48,7 @@ type ProjectServiceClient interface {
 	FreelancerUpdateProjectStatus(ctx context.Context, in *UpdateProjectStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	FreelancerProjectManagement(ctx context.Context, in *ManagementRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	FreelancerModuleUpdation(ctx context.Context, in *ModuleUpdation, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetProjectManagement(ctx context.Context, in *GetProjectById, opts ...grpc.CallOption) (*ProjectManagementResponse, error)
 	FreelancerUploadFile(ctx context.Context, in *FileRequest, opts ...grpc.CallOption) (*FileResponse, error)
 	ClientGetFile(ctx context.Context, in *GetProjectById, opts ...grpc.CallOption) (*FileResponse, error)
 	FreelancerGetFile(ctx context.Context, in *GetProjectById, opts ...grpc.CallOption) (*FileResponse, error)
@@ -403,6 +404,15 @@ func (c *projectServiceClient) FreelancerModuleUpdation(ctx context.Context, in 
 	return out, nil
 }
 
+func (c *projectServiceClient) GetProjectManagement(ctx context.Context, in *GetProjectById, opts ...grpc.CallOption) (*ProjectManagementResponse, error) {
+	out := new(ProjectManagementResponse)
+	err := c.cc.Invoke(ctx, "/project.ProjectService/GetProjectManagement", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *projectServiceClient) FreelancerUploadFile(ctx context.Context, in *FileRequest, opts ...grpc.CallOption) (*FileResponse, error) {
 	out := new(FileResponse)
 	err := c.cc.Invoke(ctx, "/project.ProjectService/FreelancerUploadFile", in, out, opts...)
@@ -523,6 +533,7 @@ type ProjectServiceServer interface {
 	FreelancerUpdateProjectStatus(context.Context, *UpdateProjectStatusRequest) (*emptypb.Empty, error)
 	FreelancerProjectManagement(context.Context, *ManagementRequest) (*emptypb.Empty, error)
 	FreelancerModuleUpdation(context.Context, *ModuleUpdation) (*emptypb.Empty, error)
+	GetProjectManagement(context.Context, *GetProjectById) (*ProjectManagementResponse, error)
 	FreelancerUploadFile(context.Context, *FileRequest) (*FileResponse, error)
 	ClientGetFile(context.Context, *GetProjectById) (*FileResponse, error)
 	FreelancerGetFile(context.Context, *GetProjectById) (*FileResponse, error)
@@ -609,6 +620,9 @@ func (UnimplementedProjectServiceServer) FreelancerProjectManagement(context.Con
 }
 func (UnimplementedProjectServiceServer) FreelancerModuleUpdation(context.Context, *ModuleUpdation) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FreelancerModuleUpdation not implemented")
+}
+func (UnimplementedProjectServiceServer) GetProjectManagement(context.Context, *GetProjectById) (*ProjectManagementResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetProjectManagement not implemented")
 }
 func (UnimplementedProjectServiceServer) FreelancerUploadFile(context.Context, *FileRequest) (*FileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FreelancerUploadFile not implemented")
@@ -1103,6 +1117,24 @@ func _ProjectService_FreelancerModuleUpdation_Handler(srv interface{}, ctx conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ProjectService_GetProjectManagement_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetProjectById)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProjectServiceServer).GetProjectManagement(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/project.ProjectService/GetProjectManagement",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProjectServiceServer).GetProjectManagement(ctx, req.(*GetProjectById))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ProjectService_FreelancerUploadFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(FileRequest)
 	if err := dec(in); err != nil {
@@ -1285,6 +1317,10 @@ var ProjectService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "FreelancerModuleUpdation",
 			Handler:    _ProjectService_FreelancerModuleUpdation_Handler,
+		},
+		{
+			MethodName: "GetProjectManagement",
+			Handler:    _ProjectService_GetProjectManagement_Handler,
 		},
 		{
 			MethodName: "FreelancerUploadFile",
