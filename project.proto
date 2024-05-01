@@ -32,8 +32,12 @@ service ProjectService {
     rpc GetAllProjects(GigFilterQuery) returns (stream ProjectResponse);
     rpc RemoveProject(GetProjectById) returns (google.protobuf.Empty);
     rpc FreelancerUpdateProjectStatus(UpdateProjectStatusRequest) returns (google.protobuf.Empty);
+    rpc FreelancerProjectManagement(ManagementRequest) returns (google.protobuf.Empty);
+    rpc FreelancerModuleUpdation(ModuleUpdation) returns (google.protobuf.Empty);
     rpc FreelancerUploadFile(FileRequest) returns (FileResponse);
     rpc ClientGetFile(GetProjectById) returns (FileResponse);
+    rpc FreelancerGetFile(GetProjectById) returns (FileResponse);
+
 
     rpc GetAllGigs(GigFilterQuery) returns (stream GigResponse);
     rpc GetAllClientRequestForFreelancers(RequestFilterQuery) returns (stream ClientRequestResponse);
@@ -178,4 +182,21 @@ message FileResponse {
 message GiveAccessRequest {
     string gigId = 1;
     string userId = 2;
+}
+message ManagementRequest {
+    string projectid = 1;
+    bool isManagementNeeded = 2;
+    int32 moduleNumber = 3;
+    repeated Module moduleDetails = 4;
+    string userId = 5;
+}
+message Module {
+    string moduleName = 1;
+    string description = 2;
+}
+message ModuleUpdation {
+    string projectId = 1;
+    string moduleId = 2;
+    string status = 3;
+    string userId = 4;
 }
