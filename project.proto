@@ -197,6 +197,6 @@ message Module {
 message ModuleUpdation {
     string projectId = 1;
     string moduleId = 2;
-    string status = 3;
+    int32 status = 3;
     string userId = 4;
 }
