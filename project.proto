@@ -155,6 +155,8 @@ message ProjectResponse {
     string startDate = 5;
     string endDate = 6;
     string status = 7;
+    bool isManagementNeeded = 8;
+    bool isPaid = 9;
 }
 message GetProjectById {
     string id = 1;
