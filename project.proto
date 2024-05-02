@@ -157,6 +157,7 @@ message ProjectResponse {
     string status = 7;
     bool isManagementNeeded = 8;
     bool isPaid = 9;
+    float price = 10;
 }
 message GetProjectById {
     string id = 1;
