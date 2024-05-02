@@ -52,6 +52,7 @@ type ProjectServiceClient interface {
 	FreelancerUploadFile(ctx context.Context, in *FileRequest, opts ...grpc.CallOption) (*FileResponse, error)
 	ClientGetFile(ctx context.Context, in *GetProjectById, opts ...grpc.CallOption) (*FileResponse, error)
 	FreelancerGetFile(ctx context.Context, in *GetProjectById, opts ...grpc.CallOption) (*FileResponse, error)
+	PaymentStatusChange(ctx context.Context, in *PaymentStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetAllGigs(ctx context.Context, in *GigFilterQuery, opts ...grpc.CallOption) (ProjectService_GetAllGigsClient, error)
 	GetAllClientRequestForFreelancers(ctx context.Context, in *RequestFilterQuery, opts ...grpc.CallOption) (ProjectService_GetAllClientRequestForFreelancersClient, error)
 }
@@ -440,6 +441,15 @@ func (c *projectServiceClient) FreelancerGetFile(ctx context.Context, in *GetPro
 	return out, nil
 }
 
+func (c *projectServiceClient) PaymentStatusChange(ctx context.Context, in *PaymentStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/project.ProjectService/PaymentStatusChange", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *projectServiceClient) GetAllGigs(ctx context.Context, in *GigFilterQuery, opts ...grpc.CallOption) (ProjectService_GetAllGigsClient, error) {
 	stream, err := c.cc.NewStream(ctx, &ProjectService_ServiceDesc.Streams[5], "/project.ProjectService/GetAllGigs", opts...)
 	if err != nil {
@@ -537,6 +547,7 @@ type ProjectServiceServer interface {
 	FreelancerUploadFile(context.Context, *FileRequest) (*FileResponse, error)
 	ClientGetFile(context.Context, *GetProjectById) (*FileResponse, error)
 	FreelancerGetFile(context.Context, *GetProjectById) (*FileResponse, error)
+	PaymentStatusChange(context.Context, *PaymentStatusRequest) (*emptypb.Empty, error)
 	GetAllGigs(*GigFilterQuery, ProjectService_GetAllGigsServer) error
 	GetAllClientRequestForFreelancers(*RequestFilterQuery, ProjectService_GetAllClientRequestForFreelancersServer) error
 	mustEmbedUnimplementedProjectServiceServer()
@@ -632,6 +643,9 @@ func (UnimplementedProjectServiceServer) ClientGetFile(context.Context, *GetProj
 }
 func (UnimplementedProjectServiceServer) FreelancerGetFile(context.Context, *GetProjectById) (*FileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FreelancerGetFile not implemented")
+}
+func (UnimplementedProjectServiceServer) PaymentStatusChange(context.Context, *PaymentStatusRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PaymentStatusChange not implemented")
 }
 func (UnimplementedProjectServiceServer) GetAllGigs(*GigFilterQuery, ProjectService_GetAllGigsServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetAllGigs not implemented")
@@ -1189,6 +1203,24 @@ func _ProjectService_FreelancerGetFile_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ProjectService_PaymentStatusChange_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PaymentStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProjectServiceServer).PaymentStatusChange(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/project.ProjectService/PaymentStatusChange",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProjectServiceServer).PaymentStatusChange(ctx, req.(*PaymentStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ProjectService_GetAllGigs_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(GigFilterQuery)
 	if err := stream.RecvMsg(m); err != nil {
@@ -1333,6 +1365,10 @@ var ProjectService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "FreelancerGetFile",
 			Handler:    _ProjectService_FreelancerGetFile_Handler,
+		},
+		{
+			MethodName: "PaymentStatusChange",
+			Handler:    _ProjectService_PaymentStatusChange_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

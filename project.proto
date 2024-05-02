@@ -38,7 +38,7 @@ service ProjectService {
     rpc FreelancerUploadFile(FileRequest) returns (FileResponse);
     rpc ClientGetFile(GetProjectById) returns (FileResponse);
     rpc FreelancerGetFile(GetProjectById) returns (FileResponse);
-
+    rpc PaymentStatusChange(PaymentStatusRequest) returns (google.protobuf.Empty);
 
     rpc GetAllGigs(GigFilterQuery) returns (stream GigResponse);
     rpc GetAllClientRequestForFreelancers(RequestFilterQuery) returns (stream ClientRequestResponse);
@@ -211,4 +211,8 @@ message ProjectManagementResponse {
     string managementId = 2;
     int32 moduleNumber = 3;
     repeated Module moduleDetails = 4;
+}
+message PaymentStatusRequest {
+    string projectId = 1;
+    bool status = 2;
 }
