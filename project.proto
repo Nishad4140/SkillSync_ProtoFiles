@@ -36,8 +36,7 @@ service ProjectService {
     rpc FreelancerModuleUpdation(ModuleUpdation) returns (google.protobuf.Empty);
     rpc GetProjectManagement(GetProjectById) returns (ProjectManagementResponse);
     rpc FreelancerUploadFile(FileRequest) returns (FileResponse);
-    rpc ClientGetFile(GetProjectById) returns (FileResponse);
-    rpc FreelancerGetFile(GetProjectById) returns (FileResponse);
+    rpc GetFile(GetProjectById) returns (FileResponse);
     rpc PaymentStatusChange(PaymentStatusRequest) returns (google.protobuf.Empty);
 
     rpc GetAllGigs(GigFilterQuery) returns (stream GigResponse);

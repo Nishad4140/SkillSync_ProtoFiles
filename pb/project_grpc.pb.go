@@ -50,8 +50,7 @@ type ProjectServiceClient interface {
 	FreelancerModuleUpdation(ctx context.Context, in *ModuleUpdation, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetProjectManagement(ctx context.Context, in *GetProjectById, opts ...grpc.CallOption) (*ProjectManagementResponse, error)
 	FreelancerUploadFile(ctx context.Context, in *FileRequest, opts ...grpc.CallOption) (*FileResponse, error)
-	ClientGetFile(ctx context.Context, in *GetProjectById, opts ...grpc.CallOption) (*FileResponse, error)
-	FreelancerGetFile(ctx context.Context, in *GetProjectById, opts ...grpc.CallOption) (*FileResponse, error)
+	GetFile(ctx context.Context, in *GetProjectById, opts ...grpc.CallOption) (*FileResponse, error)
 	PaymentStatusChange(ctx context.Context, in *PaymentStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetAllGigs(ctx context.Context, in *GigFilterQuery, opts ...grpc.CallOption) (ProjectService_GetAllGigsClient, error)
 	GetAllClientRequestForFreelancers(ctx context.Context, in *RequestFilterQuery, opts ...grpc.CallOption) (ProjectService_GetAllClientRequestForFreelancersClient, error)
@@ -423,18 +422,9 @@ func (c *projectServiceClient) FreelancerUploadFile(ctx context.Context, in *Fil
 	return out, nil
 }
 
-func (c *projectServiceClient) ClientGetFile(ctx context.Context, in *GetProjectById, opts ...grpc.CallOption) (*FileResponse, error) {
+func (c *projectServiceClient) GetFile(ctx context.Context, in *GetProjectById, opts ...grpc.CallOption) (*FileResponse, error) {
 	out := new(FileResponse)
-	err := c.cc.Invoke(ctx, "/project.ProjectService/ClientGetFile", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *projectServiceClient) FreelancerGetFile(ctx context.Context, in *GetProjectById, opts ...grpc.CallOption) (*FileResponse, error) {
-	out := new(FileResponse)
-	err := c.cc.Invoke(ctx, "/project.ProjectService/FreelancerGetFile", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/project.ProjectService/GetFile", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -545,8 +535,7 @@ type ProjectServiceServer interface {
 	FreelancerModuleUpdation(context.Context, *ModuleUpdation) (*emptypb.Empty, error)
 	GetProjectManagement(context.Context, *GetProjectById) (*ProjectManagementResponse, error)
 	FreelancerUploadFile(context.Context, *FileRequest) (*FileResponse, error)
-	ClientGetFile(context.Context, *GetProjectById) (*FileResponse, error)
-	FreelancerGetFile(context.Context, *GetProjectById) (*FileResponse, error)
+	GetFile(context.Context, *GetProjectById) (*FileResponse, error)
 	PaymentStatusChange(context.Context, *PaymentStatusRequest) (*emptypb.Empty, error)
 	GetAllGigs(*GigFilterQuery, ProjectService_GetAllGigsServer) error
 	GetAllClientRequestForFreelancers(*RequestFilterQuery, ProjectService_GetAllClientRequestForFreelancersServer) error
@@ -638,11 +627,8 @@ func (UnimplementedProjectServiceServer) GetProjectManagement(context.Context, *
 func (UnimplementedProjectServiceServer) FreelancerUploadFile(context.Context, *FileRequest) (*FileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FreelancerUploadFile not implemented")
 }
-func (UnimplementedProjectServiceServer) ClientGetFile(context.Context, *GetProjectById) (*FileResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ClientGetFile not implemented")
-}
-func (UnimplementedProjectServiceServer) FreelancerGetFile(context.Context, *GetProjectById) (*FileResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method FreelancerGetFile not implemented")
+func (UnimplementedProjectServiceServer) GetFile(context.Context, *GetProjectById) (*FileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFile not implemented")
 }
 func (UnimplementedProjectServiceServer) PaymentStatusChange(context.Context, *PaymentStatusRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PaymentStatusChange not implemented")
@@ -1167,38 +1153,20 @@ func _ProjectService_FreelancerUploadFile_Handler(srv interface{}, ctx context.C
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ProjectService_ClientGetFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ProjectService_GetFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetProjectById)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProjectServiceServer).ClientGetFile(ctx, in)
+		return srv.(ProjectServiceServer).GetFile(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/project.ProjectService/ClientGetFile",
+		FullMethod: "/project.ProjectService/GetFile",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProjectServiceServer).ClientGetFile(ctx, req.(*GetProjectById))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ProjectService_FreelancerGetFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetProjectById)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ProjectServiceServer).FreelancerGetFile(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/project.ProjectService/FreelancerGetFile",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProjectServiceServer).FreelancerGetFile(ctx, req.(*GetProjectById))
+		return srv.(ProjectServiceServer).GetFile(ctx, req.(*GetProjectById))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1359,12 +1327,8 @@ var ProjectService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ProjectService_FreelancerUploadFile_Handler,
 		},
 		{
-			MethodName: "ClientGetFile",
-			Handler:    _ProjectService_ClientGetFile_Handler,
-		},
-		{
-			MethodName: "FreelancerGetFile",
-			Handler:    _ProjectService_FreelancerGetFile_Handler,
+			MethodName: "GetFile",
+			Handler:    _ProjectService_GetFile_Handler,
 		},
 		{
 			MethodName: "PaymentStatusChange",
