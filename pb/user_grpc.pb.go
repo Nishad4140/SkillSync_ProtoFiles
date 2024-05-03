@@ -67,6 +67,7 @@ type UserServiceClient interface {
 	UnBlockClient(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	BlockFreelancer(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UnBlockFreelancer(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UpdateAverageRatingOfFreelancer(ctx context.Context, in *UpdateRatingRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type userServiceClient struct {
@@ -565,6 +566,15 @@ func (c *userServiceClient) UnBlockFreelancer(ctx context.Context, in *GetUserBy
 	return out, nil
 }
 
+func (c *userServiceClient) UpdateAverageRatingOfFreelancer(ctx context.Context, in *UpdateRatingRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/UpdateAverageRatingOfFreelancer", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -613,6 +623,7 @@ type UserServiceServer interface {
 	UnBlockClient(context.Context, *GetUserById) (*emptypb.Empty, error)
 	BlockFreelancer(context.Context, *GetUserById) (*emptypb.Empty, error)
 	UnBlockFreelancer(context.Context, *GetUserById) (*emptypb.Empty, error)
+	UpdateAverageRatingOfFreelancer(context.Context, *UpdateRatingRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -751,6 +762,9 @@ func (UnimplementedUserServiceServer) BlockFreelancer(context.Context, *GetUserB
 }
 func (UnimplementedUserServiceServer) UnBlockFreelancer(context.Context, *GetUserById) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UnBlockFreelancer not implemented")
+}
+func (UnimplementedUserServiceServer) UpdateAverageRatingOfFreelancer(context.Context, *UpdateRatingRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateAverageRatingOfFreelancer not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -1569,6 +1583,24 @@ func _UserService_UnBlockFreelancer_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_UpdateAverageRatingOfFreelancer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateRatingRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).UpdateAverageRatingOfFreelancer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/UpdateAverageRatingOfFreelancer",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).UpdateAverageRatingOfFreelancer(ctx, req.(*UpdateRatingRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1735,6 +1767,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UnBlockFreelancer",
 			Handler:    _UserService_UnBlockFreelancer_Handler,
+		},
+		{
+			MethodName: "UpdateAverageRatingOfFreelancer",
+			Handler:    _UserService_UpdateAverageRatingOfFreelancer_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

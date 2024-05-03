@@ -51,6 +51,7 @@ service UserService {
     rpc UnBlockClient(GetUserById) returns (google.protobuf.Empty);
     rpc BlockFreelancer(GetUserById) returns (google.protobuf.Empty);
     rpc UnBlockFreelancer(GetUserById) returns (google.protobuf.Empty);
+    rpc UpdateAverageRatingOfFreelancer(UpdateRatingRequest) returns (google.protobuf.Empty);
 }
 
 message ClientSignUpRequest {
@@ -180,4 +181,8 @@ message ProfileResponse {
     string freelancerId = 2;
     string title = 3;
     string experienceInCurrentField = 4;
+}
+message UpdateRatingRequest {
+    string freelancerId = 1;
+    float avgRating = 2;
 }
