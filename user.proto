@@ -81,6 +81,7 @@ message FreelancerSignUpResponse {
     string name = 3;
     string phone = 4;
     int32 categoryId = 5;
+    float rating = 6;
 }
 message LoginRequest {
     string emial = 1;
