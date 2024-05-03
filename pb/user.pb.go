@@ -1847,7 +1847,7 @@ var file_user_proto_rawDesc = []byte{
 	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x66, 0x72, 0x65, 0x65, 0x6c, 0x61, 0x6e, 0x63,
 	0x65, 0x72, 0x49, 0x64, 0x12, 0x1c, 0x0a, 0x09, 0x61, 0x76, 0x67, 0x52, 0x61, 0x74, 0x69, 0x6e,
 	0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x02, 0x52, 0x09, 0x61, 0x76, 0x67, 0x52, 0x61, 0x74, 0x69,
-	0x6e, 0x67, 0x32, 0xae, 0x18, 0x0a, 0x0b, 0x55, 0x73, 0x65, 0x72, 0x53, 0x65, 0x72, 0x76, 0x69,
+	0x6e, 0x67, 0x32, 0xe7, 0x18, 0x0a, 0x0b, 0x55, 0x73, 0x65, 0x72, 0x53, 0x65, 0x72, 0x76, 0x69,
 	0x63, 0x65, 0x12, 0x45, 0x0a, 0x0c, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x53, 0x69, 0x67, 0x6e,
 	0x75, 0x70, 0x12, 0x19, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74,
 	0x53, 0x69, 0x67, 0x6e, 0x55, 0x70, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1a, 0x2e,
@@ -2042,8 +2042,11 @@ var file_user_proto_rawDesc = []byte{
 	0x12, 0x19, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x61,
 	0x74, 0x69, 0x6e, 0x67, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x16, 0x2e, 0x67, 0x6f,
 	0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d,
-	0x70, 0x74, 0x79, 0x42, 0x06, 0x5a, 0x04, 0x2e, 0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x33,
+	0x70, 0x74, 0x79, 0x12, 0x37, 0x0a, 0x0a, 0x52, 0x65, 0x70, 0x6f, 0x72, 0x74, 0x55, 0x73, 0x65,
+	0x72, 0x12, 0x11, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x47, 0x65, 0x74, 0x55, 0x73, 0x65, 0x72,
+	0x42, 0x79, 0x49, 0x64, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x42, 0x06, 0x5a, 0x04,
+	0x2e, 0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -2134,53 +2137,55 @@ var file_user_proto_depIdxs = []int32{
 	5,  // 42: user.UserService.BlockFreelancer:input_type -> user.GetUserById
 	5,  // 43: user.UserService.UnBlockFreelancer:input_type -> user.GetUserById
 	25, // 44: user.UserService.UpdateAverageRatingOfFreelancer:input_type -> user.UpdateRatingRequest
-	1,  // 45: user.UserService.ClientSignup:output_type -> user.ClientSignUpResponse
-	3,  // 46: user.UserService.FreelancerSignup:output_type -> user.FreelancerSignUpResponse
-	1,  // 47: user.UserService.ClientLogin:output_type -> user.ClientSignUpResponse
-	3,  // 48: user.UserService.FreelancerLogin:output_type -> user.FreelancerSignUpResponse
-	1,  // 49: user.UserService.AdminLogin:output_type -> user.ClientSignUpResponse
-	26, // 50: user.UserService.ClientCreateProfile:output_type -> google.protobuf.Empty
-	12, // 51: user.UserService.ClientUploadProfileImage:output_type -> user.ImageResponse
-	12, // 52: user.UserService.ClientGetProfileImage:output_type -> user.ImageResponse
-	26, // 53: user.UserService.ClientEditName:output_type -> google.protobuf.Empty
-	26, // 54: user.UserService.ClientEditPhone:output_type -> google.protobuf.Empty
-	1,  // 55: user.UserService.GetClientById:output_type -> user.ClientSignUpResponse
-	3,  // 56: user.UserService.GetFreelancerById:output_type -> user.FreelancerSignUpResponse
-	26, // 57: user.UserService.FreelancerCreateProfile:output_type -> google.protobuf.Empty
-	12, // 58: user.UserService.FreelancerUploadProfileImage:output_type -> user.ImageResponse
-	12, // 59: user.UserService.FreelancerGetProfileImage:output_type -> user.ImageResponse
-	26, // 60: user.UserService.FreelancerEditName:output_type -> google.protobuf.Empty
-	26, // 61: user.UserService.FreelancerEditPhone:output_type -> google.protobuf.Empty
-	26, // 62: user.UserService.FreelancerAddSkill:output_type -> google.protobuf.Empty
-	26, // 63: user.UserService.FreelancerDeleteSkill:output_type -> google.protobuf.Empty
-	16, // 64: user.UserService.FreelancerGetAllSkill:output_type -> user.SkillResponse
-	26, // 65: user.UserService.FreelancerAddExperience:output_type -> google.protobuf.Empty
-	26, // 66: user.UserService.FreelancerAddEducation:output_type -> google.protobuf.Empty
-	26, // 67: user.UserService.FreelancerEditEducation:output_type -> google.protobuf.Empty
-	20, // 68: user.UserService.FreelancerGetEducation:output_type -> user.EducationResponse
-	26, // 69: user.UserService.FreelancerRemoveEducation:output_type -> google.protobuf.Empty
-	26, // 70: user.UserService.FreelancerAddTitle:output_type -> google.protobuf.Empty
-	24, // 71: user.UserService.FreelancerGetProfile:output_type -> user.ProfileResponse
-	26, // 72: user.UserService.AddCategory:output_type -> google.protobuf.Empty
-	26, // 73: user.UserService.UpdateCategory:output_type -> google.protobuf.Empty
-	7,  // 74: user.UserService.GetAllCategory:output_type -> user.UpdateCategoryRequest
-	7,  // 75: user.UserService.GetCategoryById:output_type -> user.UpdateCategoryRequest
-	26, // 76: user.UserService.AdminAddSkill:output_type -> google.protobuf.Empty
-	26, // 77: user.UserService.AdminUpdateSkill:output_type -> google.protobuf.Empty
-	16, // 78: user.UserService.GetAllSkills:output_type -> user.SkillResponse
-	26, // 79: user.UserService.ClientAddAddress:output_type -> google.protobuf.Empty
-	26, // 80: user.UserService.ClientUpdateAddress:output_type -> google.protobuf.Empty
-	10, // 81: user.UserService.ClientGetAddress:output_type -> user.AddressResponse
-	26, // 82: user.UserService.FreelancerAddAddress:output_type -> google.protobuf.Empty
-	26, // 83: user.UserService.FreelancerUpdateAddress:output_type -> google.protobuf.Empty
-	10, // 84: user.UserService.FreelancerGetAddress:output_type -> user.AddressResponse
-	26, // 85: user.UserService.BlockClient:output_type -> google.protobuf.Empty
-	26, // 86: user.UserService.UnBlockClient:output_type -> google.protobuf.Empty
-	26, // 87: user.UserService.BlockFreelancer:output_type -> google.protobuf.Empty
-	26, // 88: user.UserService.UnBlockFreelancer:output_type -> google.protobuf.Empty
-	26, // 89: user.UserService.UpdateAverageRatingOfFreelancer:output_type -> google.protobuf.Empty
-	45, // [45:90] is the sub-list for method output_type
-	0,  // [0:45] is the sub-list for method input_type
+	5,  // 45: user.UserService.ReportUser:input_type -> user.GetUserById
+	1,  // 46: user.UserService.ClientSignup:output_type -> user.ClientSignUpResponse
+	3,  // 47: user.UserService.FreelancerSignup:output_type -> user.FreelancerSignUpResponse
+	1,  // 48: user.UserService.ClientLogin:output_type -> user.ClientSignUpResponse
+	3,  // 49: user.UserService.FreelancerLogin:output_type -> user.FreelancerSignUpResponse
+	1,  // 50: user.UserService.AdminLogin:output_type -> user.ClientSignUpResponse
+	26, // 51: user.UserService.ClientCreateProfile:output_type -> google.protobuf.Empty
+	12, // 52: user.UserService.ClientUploadProfileImage:output_type -> user.ImageResponse
+	12, // 53: user.UserService.ClientGetProfileImage:output_type -> user.ImageResponse
+	26, // 54: user.UserService.ClientEditName:output_type -> google.protobuf.Empty
+	26, // 55: user.UserService.ClientEditPhone:output_type -> google.protobuf.Empty
+	1,  // 56: user.UserService.GetClientById:output_type -> user.ClientSignUpResponse
+	3,  // 57: user.UserService.GetFreelancerById:output_type -> user.FreelancerSignUpResponse
+	26, // 58: user.UserService.FreelancerCreateProfile:output_type -> google.protobuf.Empty
+	12, // 59: user.UserService.FreelancerUploadProfileImage:output_type -> user.ImageResponse
+	12, // 60: user.UserService.FreelancerGetProfileImage:output_type -> user.ImageResponse
+	26, // 61: user.UserService.FreelancerEditName:output_type -> google.protobuf.Empty
+	26, // 62: user.UserService.FreelancerEditPhone:output_type -> google.protobuf.Empty
+	26, // 63: user.UserService.FreelancerAddSkill:output_type -> google.protobuf.Empty
+	26, // 64: user.UserService.FreelancerDeleteSkill:output_type -> google.protobuf.Empty
+	16, // 65: user.UserService.FreelancerGetAllSkill:output_type -> user.SkillResponse
+	26, // 66: user.UserService.FreelancerAddExperience:output_type -> google.protobuf.Empty
+	26, // 67: user.UserService.FreelancerAddEducation:output_type -> google.protobuf.Empty
+	26, // 68: user.UserService.FreelancerEditEducation:output_type -> google.protobuf.Empty
+	20, // 69: user.UserService.FreelancerGetEducation:output_type -> user.EducationResponse
+	26, // 70: user.UserService.FreelancerRemoveEducation:output_type -> google.protobuf.Empty
+	26, // 71: user.UserService.FreelancerAddTitle:output_type -> google.protobuf.Empty
+	24, // 72: user.UserService.FreelancerGetProfile:output_type -> user.ProfileResponse
+	26, // 73: user.UserService.AddCategory:output_type -> google.protobuf.Empty
+	26, // 74: user.UserService.UpdateCategory:output_type -> google.protobuf.Empty
+	7,  // 75: user.UserService.GetAllCategory:output_type -> user.UpdateCategoryRequest
+	7,  // 76: user.UserService.GetCategoryById:output_type -> user.UpdateCategoryRequest
+	26, // 77: user.UserService.AdminAddSkill:output_type -> google.protobuf.Empty
+	26, // 78: user.UserService.AdminUpdateSkill:output_type -> google.protobuf.Empty
+	16, // 79: user.UserService.GetAllSkills:output_type -> user.SkillResponse
+	26, // 80: user.UserService.ClientAddAddress:output_type -> google.protobuf.Empty
+	26, // 81: user.UserService.ClientUpdateAddress:output_type -> google.protobuf.Empty
+	10, // 82: user.UserService.ClientGetAddress:output_type -> user.AddressResponse
+	26, // 83: user.UserService.FreelancerAddAddress:output_type -> google.protobuf.Empty
+	26, // 84: user.UserService.FreelancerUpdateAddress:output_type -> google.protobuf.Empty
+	10, // 85: user.UserService.FreelancerGetAddress:output_type -> user.AddressResponse
+	26, // 86: user.UserService.BlockClient:output_type -> google.protobuf.Empty
+	26, // 87: user.UserService.UnBlockClient:output_type -> google.protobuf.Empty
+	26, // 88: user.UserService.BlockFreelancer:output_type -> google.protobuf.Empty
+	26, // 89: user.UserService.UnBlockFreelancer:output_type -> google.protobuf.Empty
+	26, // 90: user.UserService.UpdateAverageRatingOfFreelancer:output_type -> google.protobuf.Empty
+	26, // 91: user.UserService.ReportUser:output_type -> google.protobuf.Empty
+	46, // [46:92] is the sub-list for method output_type
+	0,  // [0:46] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name

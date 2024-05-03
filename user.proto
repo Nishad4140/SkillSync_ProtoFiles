@@ -52,6 +52,7 @@ service UserService {
     rpc BlockFreelancer(GetUserById) returns (google.protobuf.Empty);
     rpc UnBlockFreelancer(GetUserById) returns (google.protobuf.Empty);
     rpc UpdateAverageRatingOfFreelancer(UpdateRatingRequest) returns (google.protobuf.Empty);
+    rpc ReportUser(GetUserById)returns(google.protobuf.Empty);
 }
 
 message ClientSignUpRequest {
