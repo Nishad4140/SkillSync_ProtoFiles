@@ -14,16 +14,18 @@ service SearchService {
 
 message UserReviewRequest{
     string userId=1;
-    string reviewingId=2;
-    string description=3;
-    int32 rating=4;
+    string freelancerId=2;
+    string projectId = 3;
+    string description=4;
+    int32 rating=5;
  }
  message ReviewResponse{
      string userId=1;
-     string reviewingId=2;
-     string description=3;
-     int32 rating=4;
-     string username=5;
+     string freelancerId=2;
+     string projectid = 3;
+     string description=4;
+     int32 rating=5;
+     string username=6;
   }
  message ReviewById{
      string id=1;
